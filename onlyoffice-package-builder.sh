@@ -93,3 +93,68 @@ EOF
     exit 1
 fi
 
+build_oo_binaries() {
+
+  _OUT_FOLDER=$1 # out
+  _PRODUCT_VERSION=$2 # 7.4.1
+  _BUILD_NUMBER=$3 # 36
+  _TAG_SUFFIX=$4 # -btactic
+  _UNLIMITED_ORGANIZATION=$5 # btactic-oo
+
+  _GIT_CLONE_BRANCH="v${_PRODUCT_VERSION}.${_BUILD_NUMBER}${_TAG_SUFFIX}"
+
+  git clone \
+    --depth=1 \
+    --recursive \
+    --branch ${_GIT_CLONE_BRANCH} \
+    https://github.com/${_UNLIMITED_ORGANIZATION}/build_tools.git \
+    build_tools
+  # Ignore detached head warning
+  cd build_tools
+  mkdir ${_OUT_FOLDER}
+  docker build --tag onlyoffice-document-editors-builder .
+  docker run -e PRODUCT_VERSION=${_PRODUCT_VERSION} -e BUILD_NUMBER=${_BUILD_NUMBER} -e NODE_ENV='production' -v $(pwd)/${_OUT_FOLDER}:/build_tools/out onlyoffice-document-editors-builder /bin/bash -c 'cd tools/linux && python3 ./automate.py --branch=tags/'"${_GIT_CLONE_BRANCH}"
+  cd ..
+
+}
+
+build_deb() {
+
+  build_deb_pre_pwd="$(pwd)"
+
+  _PRODUCT_VERSION=$2 # 7.4.1
+  _BUILD_NUMBER=$3 # 36
+  _TAG_SUFFIX=$4 # -btactic
+  _UNLIMITED_ORGANIZATION=$5 # btactic-oo
+
+  _GIT_CLONE_BRANCH="v${_PRODUCT_VERSION}.${_BUILD_NUMBER}${_TAG_SUFFIX}"
+
+  # TODO: These requirements should be moved to Dockerfile
+  # apt install build-essential m4 npm
+  # npm install -g pkg
+
+  git clone https://github.com/${_UNLIMITED_ORGANIZATION}/document-server-package.git -b ${_GIT_CLONE_BRANCH}
+  # Ignore DETACHED warnings
+  # Workaround for installing dependencies - BEGIN
+  cd document-server-package
+
+  cat << EOF >> Makefile
+
+deb_dependencies: \$(DEB_DEPS)
+
+EOF
+
+  PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_TAG_SUFFIX}" make deb_dependencies
+  cd document-server-package/deb/build
+  apt build-dep ./
+  # Workaround for installing dependencies - END
+
+  cd document-server-package
+  PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_TAG_SUFFIX}" make deb
+
+  cd ${build_deb_pre_pwd}
+
+}
+
+build_oo_binaries "out" "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}"
+build_deb "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}"
