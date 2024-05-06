@@ -119,3 +119,15 @@ build_oo_binaries() {
 }
 
 build_oo_binaries "out" "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}"
+
+docker build --tag onlyoffice-deb-builder .
+docker run \
+  -it \
+  --env PRODUCT_VERSION=${_PRODUCT_VERSION} \
+  --env BUILD_NUMBER=${_BUILD_NUMBER} \
+  --env TAG_SUFFIX=${TAG_SUFFIX} \
+  --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
+  -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
+  -v $(pwd)/build_tools:/root/build_tools:ro \
+  -f Dockerfile-manual-debian-11 \
+  onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh ${PRODUCT_VERSION} ${BUILD_NUMBER} ${TAG_SUFFIX} ${UNLIMITED_ORGANIZATION}"
