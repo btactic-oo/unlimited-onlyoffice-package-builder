@@ -128,6 +128,6 @@ docker run \
   --env TAG_SUFFIX=${TAG_SUFFIX} \
   --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
   -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
-  -v $(pwd)/build_tools:/root/build_tools:ro \
+  -v $(pwd):/root:rw \
   -f Dockerfile-manual-debian-11 \
   onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh ${PRODUCT_VERSION} ${BUILD_NUMBER} ${TAG_SUFFIX} ${UNLIMITED_ORGANIZATION}"
