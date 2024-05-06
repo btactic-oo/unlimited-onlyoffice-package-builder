@@ -26,8 +26,8 @@ cat <<EOF
   Copyright BTACTIC, SCCL
   Licensed under the GNU PUBLIC LICENSE 3.0
 
-  Usage: $0 --production-version=PRODUCT_VERSION --build-number=BUILD_NUMBER --unlimited-organization=ORGANIZATION --tag-suffix=-TAG_SUFFIX
-  Example: $0 --production-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic
+  Usage: $0 --product-version=PRODUCT_VERSION --build-number=BUILD_NUMBER --unlimited-organization=ORGANIZATION --tag-suffix=-TAG_SUFFIX
+  Example: $0 --product-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic
 
 EOF
 
@@ -41,8 +41,8 @@ for option in "$@"; do
       usage
       exit 0
     ;;
-    --production-version=*)
-      PRODUCTION_VERSION=`echo "$option" | sed 's/--production-version=//'`
+    --product-version=*)
+      PRODUCT_VERSION=`echo "$option" | sed 's/--product-version=//'`
     ;;
     --build-number=*)
       BUILD_NUMBER=`echo "$option" | sed 's/--build-number=//'`
@@ -57,9 +57,9 @@ for option in "$@"; do
 done
 
 
-if [ "x${PRODUCTION_VERSION}" == "x" ] ; then
+if [ "x${PRODUCT_VERSION}" == "x" ] ; then
     cat << EOF
-    --production-version option must be informed.
+    --product-version option must be informed.
     Aborting...
 EOF
     usage
