@@ -96,11 +96,12 @@ fi
 build_deb() {
 
   build_deb_pre_pwd="$(pwd)"
+  DOCUMENT_SERVER_PACKAGE_PATH="$(pwd)/document-server-package"
 
-  _PRODUCT_VERSION=$2 # 7.4.1
-  _BUILD_NUMBER=$3 # 36
-  _TAG_SUFFIX=$4 # -btactic
-  _UNLIMITED_ORGANIZATION=$5 # btactic-oo
+  _PRODUCT_VERSION=$1 # 7.4.1
+  _BUILD_NUMBER=$2 # 36
+  _TAG_SUFFIX=$3 # -btactic
+  _UNLIMITED_ORGANIZATION=$4 # btactic-oo
 
   _GIT_CLONE_BRANCH="v${_PRODUCT_VERSION}.${_BUILD_NUMBER}${_TAG_SUFFIX}"
 
@@ -111,7 +112,7 @@ build_deb() {
   git clone https://github.com/${_UNLIMITED_ORGANIZATION}/document-server-package.git -b ${_GIT_CLONE_BRANCH}
   # Ignore DETACHED warnings
   # Workaround for installing dependencies - BEGIN
-  cd document-server-package
+  cd ${DOCUMENT_SERVER_PACKAGE_PATH}
 
   cat << EOF >> Makefile
 
@@ -120,11 +121,11 @@ deb_dependencies: \$(DEB_DEPS)
 EOF
 
   PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_TAG_SUFFIX}" make deb_dependencies
-  cd document-server-package/deb/build
-  apt build-dep ./
+  cd ${DOCUMENT_SERVER_PACKAGE_PATH}/deb/build
+  apt-get -qq build-dep -y ./
   # Workaround for installing dependencies - END
 
-  cd document-server-package
+  cd ${DOCUMENT_SERVER_PACKAGE_PATH}
   PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_TAG_SUFFIX}" make deb
 
   cd ${build_deb_pre_pwd}
