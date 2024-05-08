@@ -122,7 +122,7 @@ EOF
 
   PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_TAG_SUFFIX}" make deb_dependencies
   cd ${DOCUMENT_SERVER_PACKAGE_PATH}/deb/build
-  apt build-dep ./
+  apt-get -qq build-dep -y ./
   # Workaround for installing dependencies - END
 
   cd ${DOCUMENT_SERVER_PACKAGE_PATH}
