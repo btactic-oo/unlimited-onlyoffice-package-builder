@@ -26,8 +26,8 @@ cat <<EOF
   Copyright BTACTIC, SCCL
   Licensed under the GNU PUBLIC LICENSE 3.0
 
-  Usage: $0 --product-version=PRODUCT_VERSION --build-number=BUILD_NUMBER --unlimited-organization=ORGANIZATION --tag-suffix=-TAG_SUFFIX
-  Example: $0 --product-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic
+  Usage: $0 --product-version=PRODUCT_VERSION --build-number=BUILD_NUMBER --unlimited-organization=ORGANIZATION --tag-suffix=-TAG_SUFFIX --debian-package-suffix=-DEBIAN_PACKAGE_SUFFIX
+  Example: $0 --product-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic --debian-package-suffix=-btactic
 
 EOF
 
@@ -52,6 +52,9 @@ for option in "$@"; do
     ;;
     --tag-suffix=*)
       TAG_SUFFIX=`echo "$option" | sed 's/--tag-suffix=//'`
+    ;;
+    --debian-package-suffix=*)
+      DEBIAN_PACKAGE_SUFFIX=`echo "$option" | sed 's/--debian-package-suffix=//'`
     ;;
   esac
 done
@@ -87,6 +90,15 @@ fi
 if [ "x${TAG_SUFFIX}" == "x" ] ; then
     cat << EOF
     --tag-suffix option must be informed.
+    Aborting...
+EOF
+    usage
+    exit 1
+fi
+
+if [ "x${DEBIAN_PACKAGE_SUFFIX}" == "x" ] ; then
+    cat << EOF
+    --debian-package-suffix option must be informed.
     Aborting...
 EOF
     usage
@@ -129,10 +141,11 @@ if [ ${build_oo_binaries_exit_value} -eq 0 ] ; then
     --env BUILD_NUMBER=${BUILD_NUMBER} \
     --env TAG_SUFFIX=${TAG_SUFFIX} \
     --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
+    --env DEBIAN_PACKAGE_SUFFIX=${DEBIAN_PACKAGE_SUFFIX} \
     -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
     -v $(pwd):/root:rw \
     -v $(pwd)/../build_tools:/root/build_tools:ro \
-    onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh --product-version ${PRODUCT_VERSION} --build-number ${BUILD_NUMBER} --tag-suffix ${TAG_SUFFIX} --unlimited-organization ${UNLIMITED_ORGANIZATION}"
+    onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh --product-version ${PRODUCT_VERSION} --build-number ${BUILD_NUMBER} --tag-suffix ${TAG_SUFFIX} --unlimited-organization ${UNLIMITED_ORGANIZATION} --debian-package-suffix ${DEBIAN_PACKAGE_SUFFIX}"
   cd ..
 else
   echo "Binaries build failed!"
