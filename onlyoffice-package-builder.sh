@@ -123,8 +123,8 @@ build_oo_binaries "out" "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "
 docker build --tag onlyoffice-deb-builder .
 docker run \
   -it \
-  --env PRODUCT_VERSION=${_PRODUCT_VERSION} \
-  --env BUILD_NUMBER=${_BUILD_NUMBER} \
+  --env PRODUCT_VERSION=${PRODUCT_VERSION} \
+  --env BUILD_NUMBER=${BUILD_NUMBER} \
   --env TAG_SUFFIX=${TAG_SUFFIX} \
   --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
   -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
