@@ -129,4 +129,4 @@ docker run \
   --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
   -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
   -v $(pwd):/root:rw \
-  onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh ${PRODUCT_VERSION} ${BUILD_NUMBER} ${TAG_SUFFIX} ${UNLIMITED_ORGANIZATION}"
+  onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh --product-version ${PRODUCT_VERSION} --build-number ${BUILD_NUMBER} --tag-suffix ${TAG_SUFFIX} --unlimited-organization ${UNLIMITED_ORGANIZATION}"
