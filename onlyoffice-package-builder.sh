@@ -119,17 +119,23 @@ build_oo_binaries() {
 }
 
 build_oo_binaries "out" "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}"
-
-cd deb_build
-docker build --tag onlyoffice-deb-builder . -f Dockerfile-manual-debian-11
-docker run \
-  -it \
-  --env PRODUCT_VERSION=${PRODUCT_VERSION} \
-  --env BUILD_NUMBER=${BUILD_NUMBER} \
-  --env TAG_SUFFIX=${TAG_SUFFIX} \
-  --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
-  -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
-  -v $(pwd):/root:rw \
-  -v $(pwd)/../build_tools:/root/build_tools:ro \
-  onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh --product-version ${PRODUCT_VERSION} --build-number ${BUILD_NUMBER} --tag-suffix ${TAG_SUFFIX} --unlimited-organization ${UNLIMITED_ORGANIZATION}"
-cd ..
+build_oo_binaries_exit_value=$?
+if [ ${build_oo_binaries_exit_value} -eq 0 ] ; then
+  cd deb_build
+  docker build --tag onlyoffice-deb-builder . -f Dockerfile-manual-debian-11
+  docker run \
+    -it \
+    --env PRODUCT_VERSION=${PRODUCT_VERSION} \
+    --env BUILD_NUMBER=${BUILD_NUMBER} \
+    --env TAG_SUFFIX=${TAG_SUFFIX} \
+    --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
+    -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
+    -v $(pwd):/root:rw \
+    -v $(pwd)/../build_tools:/root/build_tools:ro \
+    onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh --product-version ${PRODUCT_VERSION} --build-number ${BUILD_NUMBER} --tag-suffix ${TAG_SUFFIX} --unlimited-organization ${UNLIMITED_ORGANIZATION}"
+  cd ..
+else
+  echo "Binaries build failed!"
+  echo "Aborting... !"
+  exit 1
+fi
