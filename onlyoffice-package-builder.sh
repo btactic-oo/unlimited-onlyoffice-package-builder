@@ -29,10 +29,16 @@ cat <<EOF
   Usage: $0 --product-version=PRODUCT_VERSION --build-number=BUILD_NUMBER --unlimited-organization=ORGANIZATION --tag-suffix=-TAG_SUFFIX --debian-package-suffix=-DEBIAN_PACKAGE_SUFFIX
   Example: $0 --product-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic --debian-package-suffix=-btactic
 
+  For Github actions you might want to either build only binaries or build only deb so that it's easier to prune containers
+  Example: $0 --product-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic --debian-package-suffix=-btactic --binaries-only
+  Example: $0 --product-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic --debian-package-suffix=-btactic --deb-only
+
 EOF
 
 }
 
+BINARIES_ONLY="false"
+DEB_ONLY="false"
 
 # Check the arguments.
 for option in "$@"; do
@@ -56,9 +62,27 @@ for option in "$@"; do
     --debian-package-suffix=*)
       DEBIAN_PACKAGE_SUFFIX=`echo "$option" | sed 's/--debian-package-suffix=//'`
     ;;
+    --binaries-only)
+      BINARIES_ONLY="true"
+    ;;
+    --deb-only)
+      DEB_ONLY="true"
+    ;;
   esac
 done
 
+BUILD_BINARIES="true"
+BUILD_DEB="true"
+
+if [ ${BINARIES_ONLY} == "true" ] ; then
+  BUILD_BINARIES="true"
+  BUILD_DEB="false"
+fi
+
+if [ ${DEB_ONLY} == "true" ] ; then
+  BUILD_BINARIES="false"
+  BUILD_DEB="true"
+fi
 
 if [ "x${PRODUCT_VERSION}" == "x" ] ; then
     cat << EOF
@@ -105,6 +129,23 @@ EOF
     exit 1
 fi
 
+PRUNE_DOCKER_CONTAINERS_ACTION="false"
+if [ "x${PRUNE_DOCKER_CONTAINERS}" != "x" ] ; then
+  if [ ${PRUNE_DOCKER_CONTAINERS} == "true" ] -o [ ${PRUNE_DOCKER_CONTAINERS} == "TRUE" ] ; then
+    PRUNE_DOCKER_CONTAINERS_ACTION="true"
+    cat << EOF
+    WARNING !
+    WARNING !
+    --prune-docker-containers has been set to true
+    This will erase all of your docker containers
+    after the binaries build.
+
+    Waiting for 30s so that you can CTRL+C
+EOF
+    sleep 30s
+  fi
+fi
+
 build_oo_binaries() {
 
   _OUT_FOLDER=$1 # out
@@ -130,25 +171,36 @@ build_oo_binaries() {
 
 }
 
-build_oo_binaries "out" "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}"
-build_oo_binaries_exit_value=$?
-if [ ${build_oo_binaries_exit_value} -eq 0 ] ; then
-  cd deb_build
-  docker build --tag onlyoffice-deb-builder . -f Dockerfile-manual-debian-11
-  docker run \
-    -it \
-    --env PRODUCT_VERSION=${PRODUCT_VERSION} \
-    --env BUILD_NUMBER=${BUILD_NUMBER} \
-    --env TAG_SUFFIX=${TAG_SUFFIX} \
-    --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
-    --env DEBIAN_PACKAGE_SUFFIX=${DEBIAN_PACKAGE_SUFFIX} \
-    -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
-    -v $(pwd):/root:rw \
-    -v $(pwd)/../build_tools:/root/build_tools:ro \
-    onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh --product-version ${PRODUCT_VERSION} --build-number ${BUILD_NUMBER} --tag-suffix ${TAG_SUFFIX} --unlimited-organization ${UNLIMITED_ORGANIZATION} --debian-package-suffix ${DEBIAN_PACKAGE_SUFFIX}"
-  cd ..
-else
-  echo "Binaries build failed!"
-  echo "Aborting... !"
-  exit 1
+if [ "${BUILD_BINARIES}" == "true" ] ; then
+  build_oo_binaries "out" "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}"
+  build_oo_binaries_exit_value=$?
+fi
+
+# Simulate that binaries build went ok
+# when we only want to make the deb
+if [ ${DEB_ONLY} == "true" ] ; then
+  build_oo_binaries_exit_value=0
+fi
+
+if [ "${BUILD_DEB}" == "true" ] ; then
+  if [ ${build_oo_binaries_exit_value} -eq 0 ] ; then
+    cd deb_build
+    docker build --tag onlyoffice-deb-builder . -f Dockerfile-manual-debian-11
+    docker run \
+      -it \
+      --env PRODUCT_VERSION=${PRODUCT_VERSION} \
+      --env BUILD_NUMBER=${BUILD_NUMBER} \
+      --env TAG_SUFFIX=${TAG_SUFFIX} \
+      --env UNLIMITED_ORGANIZATION=${UNLIMITED_ORGANIZATION} \
+      --env DEBIAN_PACKAGE_SUFFIX=${DEBIAN_PACKAGE_SUFFIX} \
+      -v $(pwd):/usr/local/unlimited-onlyoffice-package-builder:ro \
+      -v $(pwd):/root:rw \
+      -v $(pwd)/../build_tools:/root/build_tools:ro \
+      onlyoffice-deb-builder /bin/bash -c "/usr/local/unlimited-onlyoffice-package-builder/onlyoffice-deb-builder.sh --product-version ${PRODUCT_VERSION} --build-number ${BUILD_NUMBER} --tag-suffix ${TAG_SUFFIX} --unlimited-organization ${UNLIMITED_ORGANIZATION} --debian-package-suffix ${DEBIAN_PACKAGE_SUFFIX}"
+    cd ..
+  else
+    echo "Binaries build failed!"
+    echo "Aborting... !"
+    exit 1
+  fi
 fi
