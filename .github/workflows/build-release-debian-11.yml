@@ -1,0 +1,67 @@
+name: release-onlyoffice
+
+on:
+  push:
+    tags:
+      - builds-debian-11/*
+
+env:
+  DEBIAN_PACKAGE_SUFFIX: -btactic
+  TAG_SUFFIX: -btactic
+  DISTRO_FULLNAME: Debian 11
+  DISTRO_TAG_PREFIX: debian-11
+
+jobs:
+  onlyoffice-release:
+    strategy:
+      matrix:
+        TARGET_DISTRO: [ "debian-11" ]
+    runs-on: debian-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Split branch name
+        env:
+          BRANCH: ${{ github.ref_name }}
+        id: split-tag
+        run: echo "version=${BRANCH##*/}" >> $GITHUB_OUTPUT
+      - name: Get Product version
+        env:
+          VERSION: ${{ steps.split-tag.outputs.version }}
+        id: get-product-version
+        run: echo "product-version=${VERSION%.*}" >> $GITHUB_OUTPUT
+      - name: Get Build number
+        env:
+          VERSION: ${{ steps.split-tag.outputs.version }}
+          PRODUCT_VERSION: ${{ steps.get-product-version.outputs.product-version }}
+        id: get-build-number
+        run: echo "build-number=${VERSION##$PRODUCT_VERSION.}" >> $GITHUB_OUTPUT
+      - name: Docker build binaries
+        id: docker-build-binaries
+        run: |
+          ./onlyoffice-package-builder.sh --product-version=${{ steps.get-product-version.outputs.product-version }} --build-number=${{ steps.get-build-number.outputs.build-number }} --unlimited-organization=${{ github.repository_owner }} --tag-suffix=${{ env.TAG_SUFFIX }} --debian-package-suffix=${{ env.DEBIAN_PACKAGE_SUFFIX }}
+
+      - run: ls -la ${{ github.workspace }}/BUILDS/
+      - name: Get tgz release filename
+        id: deb-release
+        run: |
+          RELEASE_DEB=$(find "${{ github.workspace }}" -name "onlyoffice-documentserver_${{ steps.get-product-version.outputs.product-version }}-${{ steps.get-build-number.outputs.build-number }}${{ env.DEBIAN_PACKAGE_SUFFIX }}_amd64.deb" -type f)
+          RELEASE_SHORT_DEB=$(basename ${RELEASE_DEB})
+          echo "filename=${RELEASE_DEB}" >> $GITHUB_OUTPUT
+          echo "shortfilename=${RELEASE_SHORT_DEB}" >> $GITHUB_OUTPUT
+      - name: Release
+        uses: crowbarmaster/GH-Automatic-Releases@v1.6.0
+        with:
+          repo_token: ${{ github.token }}
+          prerelease: false
+          generate_notes: false
+          automatic_release_tag: onlyoffice-unlimited-build-${{ env.DISTRO_TAG_PREFIX }}/${{ steps.split-tag.outputs.version }}
+          title: OnlyOffice ${{ steps.split-tag.outputs.version }} Unlimited Build ( ${{ env.DISTRO_FULLNAME }} )
+          body: |
+            Make sure to install and check that the default deb binary from OnlyOffice repo works for you.
+            Then install this deb on your system thanks to:
+            ```
+            apt install /path/to/${{ steps.deb-release.outputs.shortfilename }}
+            ```
+          files: |
+            ${{ steps.deb-release.outputs.filename }}
