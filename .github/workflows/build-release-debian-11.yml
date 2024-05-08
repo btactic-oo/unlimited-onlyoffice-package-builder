@@ -39,9 +39,17 @@ jobs:
       - name: Docker build binaries
         id: docker-build-binaries
         run: |
-          ./onlyoffice-package-builder.sh --product-version=${{ steps.get-product-version.outputs.product-version }} --build-number=${{ steps.get-build-number.outputs.build-number }} --unlimited-organization=${{ github.repository_owner }} --tag-suffix=${{ env.TAG_SUFFIX }} --debian-package-suffix=${{ env.DEBIAN_PACKAGE_SUFFIX }}
-
-      - run: ls -la ${{ github.workspace }}/BUILDS/
+          ./onlyoffice-package-builder.sh --product-version=${{ steps.get-product-version.outputs.product-version }} --build-number=${{ steps.get-build-number.outputs.build-number }} --unlimited-organization=${{ github.repository_owner }} --tag-suffix=${{ env.TAG_SUFFIX }} --debian-package-suffix=${{ env.DEBIAN_PACKAGE_SUFFIX }} --binaries-only
+      - name: Docker prune all containers
+        id: docker-prune-all-containers
+        run: |
+          docker ps -a
+          docker container prune -f
+          docker ps -a
+      - name: Docker build deb package
+        id: docker-build-deb
+        run: |
+          ./onlyoffice-package-builder.sh --product-version=${{ steps.get-product-version.outputs.product-version }} --build-number=${{ steps.get-build-number.outputs.build-number }} --unlimited-organization=${{ github.repository_owner }} --tag-suffix=${{ env.TAG_SUFFIX }} --debian-package-suffix=${{ env.DEBIAN_PACKAGE_SUFFIX }} --deb-only
       - name: Get tgz release filename
         id: deb-release
         run: |
