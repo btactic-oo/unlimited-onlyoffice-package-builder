@@ -49,5 +49,5 @@ mkdir ~/build-onlyoffice-test-01
 cd ~/build-onlyoffice-test-01
 git clone https://github.com/btactic-oo/unlimited-onlyoffice-package-builder
 cd unlimited-onlyoffice-package-builder
-./onlyoffice-package-builder.sh --product-version=8.0.1 --build-number=31 --unlimited-organization=btactic-oo --tag-suffix=-btactic
+./onlyoffice-package-builder.sh --product-version=8.0.1 --build-number=31 --unlimited-organization=btactic-oo --tag-suffix=-btactic --debian-package-suffix=-btactic
 ```

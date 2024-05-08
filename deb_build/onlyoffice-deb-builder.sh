@@ -26,8 +26,8 @@ cat <<EOF
   Copyright BTACTIC, SCCL
   Licensed under the GNU PUBLIC LICENSE 3.0
 
-  Usage: $0 --product-version=PRODUCT_VERSION --build-number=BUILD_NUMBER --unlimited-organization=ORGANIZATION --tag-suffix=-TAG_SUFFIX
-  Example: $0 --product-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic
+  Usage: $0 --product-version=PRODUCT_VERSION --build-number=BUILD_NUMBER --unlimited-organization=ORGANIZATION --tag-suffix=-TAG_SUFFIX --debian-package-suffix=-DEBIAN_PACKAGE_SUFFIX
+  Example: $0 --product-version=7.4.1 --build-number=36 --unlimited-organization=btactic-oo --tag-suffix=-btactic --debian-package-suffix=-btactic
 
 EOF
 
@@ -52,6 +52,9 @@ for option in "$@"; do
     ;;
     --tag-suffix=*)
       TAG_SUFFIX=`echo "$option" | sed 's/--tag-suffix=//'`
+    ;;
+    --debian-package-suffix=*)
+      DEBIAN_PACKAGE_SUFFIX=`echo "$option" | sed 's/--debian-package-suffix=//'`
     ;;
   esac
 done
@@ -93,6 +96,15 @@ EOF
     exit 1
 fi
 
+if [ "x${DEBIAN_PACKAGE_SUFFIX}" == "x" ] ; then
+    cat << EOF
+    --debian-package-suffix option must be informed.
+    Aborting...
+EOF
+    usage
+    exit 1
+fi
+
 build_deb() {
 
   build_deb_pre_pwd="$(pwd)"
@@ -102,6 +114,7 @@ build_deb() {
   _BUILD_NUMBER=$2 # 36
   _TAG_SUFFIX=$3 # -btactic
   _UNLIMITED_ORGANIZATION=$4 # btactic-oo
+  _DEBIAN_PACKAGE_SUFFIX=$5
 
   _GIT_CLONE_BRANCH="v${_PRODUCT_VERSION}.${_BUILD_NUMBER}${_TAG_SUFFIX}"
 
@@ -120,16 +133,16 @@ deb_dependencies: \$(DEB_DEPS)
 
 EOF
 
-  PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_TAG_SUFFIX}" make deb_dependencies
+  PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_DEBIAN_PACKAGE_SUFFIX}" make deb_dependencies
   cd ${DOCUMENT_SERVER_PACKAGE_PATH}/deb/build
   apt-get -qq build-dep -y ./
   # Workaround for installing dependencies - END
 
   cd ${DOCUMENT_SERVER_PACKAGE_PATH}
-  PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_TAG_SUFFIX}" make deb
+  PRODUCT_VERSION="${_PRODUCT_VERSION}" BUILD_NUMBER="${_BUILD_NUMBER}${_DEBIAN_PACKAGE_SUFFIX}" make deb
 
   cd ${build_deb_pre_pwd}
 
 }
 
-build_deb "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}"
+build_deb "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}" "${DEBIAN_PACKAGE_SUFFIX}"
