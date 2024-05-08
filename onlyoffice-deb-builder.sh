@@ -98,10 +98,10 @@ build_deb() {
   build_deb_pre_pwd="$(pwd)"
   DOCUMENT_SERVER_PACKAGE_PATH="$(pwd)/document-server-package"
 
-  _PRODUCT_VERSION=$2 # 7.4.1
-  _BUILD_NUMBER=$3 # 36
-  _TAG_SUFFIX=$4 # -btactic
-  _UNLIMITED_ORGANIZATION=$5 # btactic-oo
+  _PRODUCT_VERSION=$1 # 7.4.1
+  _BUILD_NUMBER=$2 # 36
+  _TAG_SUFFIX=$3 # -btactic
+  _UNLIMITED_ORGANIZATION=$4 # btactic-oo
 
   _GIT_CLONE_BRANCH="v${_PRODUCT_VERSION}.${_BUILD_NUMBER}${_TAG_SUFFIX}"
 
