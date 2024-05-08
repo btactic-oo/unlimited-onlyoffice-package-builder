@@ -132,7 +132,7 @@ build_oo_binaries() {
 
 build_oo_binaries "out" "${PRODUCT_VERSION}" "${BUILD_NUMBER}" "${TAG_SUFFIX}" "${UNLIMITED_ORGANIZATION}"
 build_oo_binaries_exit_value=$?
-if [ build_oo_binaries_exit_value -eq 0 ] ; then
+if [ ${build_oo_binaries_exit_value} -eq 0 ] ; then
   cd deb_build
   docker build --tag onlyoffice-deb-builder . -f Dockerfile-manual-debian-11
   docker run \
