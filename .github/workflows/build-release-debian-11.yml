@@ -17,6 +17,8 @@ jobs:
       matrix:
         TARGET_DISTRO: [ "debian-11" ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Free Space - Init
         run: |
