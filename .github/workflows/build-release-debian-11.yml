@@ -18,6 +18,48 @@ jobs:
         TARGET_DISTRO: [ "debian-11" ]
     runs-on: ubuntu-latest
     steps:
+      - name: Free Space - Init
+        run: |
+          echo "$GITHUB_WORKSPACE"
+          df -h
+      - name: Free Space - Remove swap
+        run: |
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          df -h
+      - name: Free Space - Remove boost & tools
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
+      - name: Free Space - Remove dotnet
+        run: |
+          sudo rm -rf /usr/share/dotnet/shared/
+          sudo rm -rf /usr/share/dotnet/host/
+          sudo rm -rf /usr/share/dotnet/sdk/
+          df -h
+      - name: Free Space - Remove android
+        run: |
+          sudo rm -rf "$ANDROID_SDK_ROOT"
+          sudo rm -rf /usr/local/lib/android
+          df -h
+      - name: Free Space - Remove swift
+        run: |
+          sudo rm -rf "$SWIFT_PATH"
+          sudo rm -rf /usr/share/swift
+          df -h
+      - name: Free Space - apt-get clean
+        run: |
+          sudo apt-get clean
+          df -h
+      - name: Free Space - Show docker images
+        run: |
+          docker image ls -a
+          df -h
+      - name: Free Space - Remove docker images
+        run: |
+          docker rmi $(docker image ls -aq)
+          df -h
       - name: Check out the repo
         uses: actions/checkout@v4
       - name: Split branch name
