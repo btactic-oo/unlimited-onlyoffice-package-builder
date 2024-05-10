@@ -18,11 +18,8 @@ jobs:
         TARGET_DISTRO: [ "debian-11" ]
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: write
-      packages: write
-      pull-requests: write
-      issues: read
+      workflows: write
     steps:
       - name: Free Space - Init
         run: |
