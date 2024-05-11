@@ -515,6 +515,88 @@ git tag -a 'builds-debian-11/8.0.1.31' -m 'builds-debian-11/8.0.1.31'
 git push --force origin 'builds-debian-11/8.0.1.31'
 ```
 
+## Testing has some problems
+
+So, apparently we are lacking `/etc/supervisor/conf.d/ds-converter.conf` in our system after installing the package. I think it is a consequence of only installing the `server` component which does not have those configuration files. **If that's the case this is a bug.**
+
+```
+Desempaquetando onlyoffice-documentserver (8.0.1-31-btactic) sobre (7.0.0-132~btactic1) ...                                                      
+Configurando onlyoffice-documentserver (8.0.1-31-btactic) ...                                                                                    
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver-example/default.json ...                                
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver-example/nginx/includes/ds-example.conf ...              
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver-example/production-linux.json ...                       
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver-example/production-windows.json ...                     
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/default.json ...                                        
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/development-linux.json ...                              
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/development-mac.json ...                                
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/development-windows.json ...                            
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/log4js/development.json ...                             
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/log4js/production.json ...                              
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/logrotate/ds.conf ...
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/nginx/ds-ssl.conf.tmpl ...
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/nginx/ds.conf.tmpl ...
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/nginx/includes/ds-docservice.conf ...
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/nginx/includes/http-common.conf ...
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/production-linux.json ...
+Instalando una nueva versión del fichero de configuración /etc/onlyoffice/documentserver/production-windows.json ...
+```
+
+So, apparently the files are there but somehow those same files are removed from supervisord so this cannot be updated.
+
+I might need to check if there is any guide to update from OnlyOffice 7 to OnlyOffice 8.
+
+Wait a moment... those files are not used in our production environment.
+
+Our production environment leads us to:
+```
+● ds-docservice.service - Docs Docservice
+     Loaded: loaded (/lib/systemd/system/ds-docservice.service; enabled; vendor preset: enabled)
+     Active: active (running) since Fri 2024-05-10 19:13:06 CEST; 49min ago
+   Main PID: 1753208 (sh)
+      Tasks: 12 (limit: 9510)
+     Memory: 90.0M
+        CPU: 4.734s
+     CGroup: /system.slice/ds-docservice.service
+             ├─1753208 /bin/sh -c exec /var/www/onlyoffice/documentserver/server/DocService/docservice 2>&1 | tee -a /var/log/onlyoffice/documen>
+             ├─1753212 /var/www/onlyoffice/documentserver/server/DocService/docservice
+             └─1753213 tee -a /var/log/onlyoffice/documentserver/docservice/out.log
+
+may 10 20:02:56 onlyoffice006 sh[1753213]: [2024-05-10T20:02:56.668] [ERROR] [localhost] [docId] [userId] nodeJS - [AMQP] Error: connect ECONNRE>
+may 10 20:02:56 onlyoffice006 sh[1753213]:     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1187:16
+```
+where we can debug what might be happening (assuming it's not a bug related to **not building all of the modules**).
+
+Unfortunately those `Error: connect ECONNREFUSED` errors happened way before installing this package.
+I might need to restore an snapshot of my onlyoffice build machine to make sure I'm not over checking something that it was already broken.
+
+Well, before doing that... The port 5672 that appears in the logs seems to be related to `beam.smp` which it's connected to rabbitmq.
+
+And that's right, trying to start its service (after stopping it) ends in an error.
+
+```
+root@onlyoffice006:~# systemctl start rabbitmq-server.service 
+Job for rabbitmq-server.service failed because the control process exited with error code.
+See "systemctl status rabbitmq-server.service" and "journalctl -xe" for details.
+```
+
+I'll try to debug this just in case it's something easy to fix.
+
+It's worth a try to reinstall this package after a purge and then probably reinstall our onlyoffice package.
+
+```
+sudo apt-get purge rabbitmq-server
+sudo apt-get install rabbitmq-server
+```
+
+Wait a moment... apparently... fixing my /etc/hosts should fix this issue.
+
+Well, after all, it might have not been needed to build every module instead of only the `server` module.
+With only server module it takes around 2 hours to build in Github Actions, if it takes much longer with all of the modules (or if it takes too much space) I might reconsider switching back to only build the server component.
+
+Ok, there is no meaningful difference between building only the `server` module or all of them so we will build all of them as once I was advised.
+
+I think we are done with all of this.
+
 ## Possible issue with QT
 
 Do we actually need to build QT for the server part? Never mind, it has been already [reported](https://github.com/ONLYOFFICE/build_tools/issues/190).
