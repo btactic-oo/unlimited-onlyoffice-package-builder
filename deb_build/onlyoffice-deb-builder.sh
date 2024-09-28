@@ -116,13 +116,13 @@ build_deb() {
   _UNLIMITED_ORGANIZATION=$4 # btactic-oo
   _DEBIAN_PACKAGE_SUFFIX=$5
 
-  _GIT_CLONE_BRANCH="v${_PRODUCT_VERSION}.${_BUILD_NUMBER}${_TAG_SUFFIX}"
+  _GIT_CLONE_BRANCH="v${_PRODUCT_VERSION}.${_BUILD_NUMBER}"
 
   # TODO: These requirements should be moved to Dockerfile
   # apt install build-essential m4 npm
   # npm install -g pkg
 
-  git clone https://github.com/${_UNLIMITED_ORGANIZATION}/document-server-package.git -b ${_GIT_CLONE_BRANCH}
+  git clone https://github.com/ONLYOFFICE/document-server-package.git -b ${_GIT_CLONE_BRANCH}
   # Ignore DETACHED warnings
   # Workaround for installing dependencies - BEGIN
   cd ${DOCUMENT_SERVER_PACKAGE_PATH}
