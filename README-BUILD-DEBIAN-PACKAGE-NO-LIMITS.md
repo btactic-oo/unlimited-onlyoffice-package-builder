@@ -10,7 +10,7 @@ This package is known to work in Debian 11 systems and might also work on other 
 
 If you need more technical articles that cover how we deal with releasing new debian package binaries you can check:
 
-- [onlyoffice-no-limits-2024-05.md](onlyoffice-no-limits-2024-05.md) .
+- [onlyoffice-no-limits-2024-05.md](development_logs/onlyoffice-no-limits-2024-05.md) .
 
 ## System Base
 
