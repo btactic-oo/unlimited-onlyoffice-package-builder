@@ -354,7 +354,23 @@ The most recent 8.1.3 version is:
 so that's the version that we will be using.
 Well, we will be using 8.1.3.3 instead because 8.1.3.4 is not available.
 
+## Decide where to build
+
+If you want to build in your own VPS please check the following sections:
+
+- Build machine setup (BUILDM)
+- **TODO**
+
+If you want to build in Github please check the following sections:
+
+- **TODO**
+- **TODO**
+
 ## Build machine setup (BUILDM)
+
+### About the build machine setup section
+
+Please notice that if you decide to build directly from Github Actions this build machine won't be needed at all so you can skip this section altogether.
 
 ### Docker-CE Requisite
 
@@ -424,6 +440,13 @@ the email address needs to be the one used for your GitHub account.
 Then upload the `id_rsa.pub` key to your GitHub profile: [https://github.com/settings/keys](https://github.com/settings/keys).
 
 Note: I personally only use an additional Github account because you cannot set this SSH key as a read-only one. You are supposed to use a deploy key but those are attached to a single repo or organisation.
+
+### Git software
+
+```
+apt install git
+```
+should do it in most of the Debian/Ubuntu systems so that you can later use Git.
 
 ### Build from build virtual machine (Optional)
 
