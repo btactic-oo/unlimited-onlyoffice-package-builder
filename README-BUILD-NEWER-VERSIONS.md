@@ -33,9 +33,9 @@ In this document we will suppose that you have:
 
 or in another words (with their own alias):
 
-- A desktop GNU/Linux machine (DESKTOPM)
-- An onlyoffice build GNU/Linux machine (BUILDM)
-- An onlyoffice installed machine thanks to official repo packages (ONLYM)
+- A desktop GNU/Linux machine (**DESKTOPM**)
+- An onlyoffice build GNU/Linux machine (**BUILDM**)
+- An onlyoffice installed machine thanks to official repo packages (**ONLYM**)
 
 ## Github - Fork time
 
@@ -353,6 +353,77 @@ The most recent 8.1.3 version is:
 
 so that's the version that we will be using.
 Well, we will be using 8.1.3.3 instead because 8.1.3.4 is not available.
+
+## Build machine setup (BUILDM)
+
+### Docker-CE Requisite
+
+This build method uses Docker under the hood. You will find instructions on how to setup your build user to use Docker. This only needs to be done once. These Docker instructions are meant for Ubuntu 20.04 but any other generic Docker setup instructions for your OS should be ok.
+
+Be aware of RHEL 8 based distributions. Search for a [docker-ce howto](https://computingforgeeks.com/install-docker-and-docker-compose-on-rhel-8-centos-8/). Trying to install docker package directly installs *podman* and *buildah* which **do not work exactly as docker-ce** although they seem to be advertised as such.
+
+### Docker setup
+
+*Note: The commands for this Docker setup need to be run as either root user or a user that it's part of the sudo group, usually the admin user.*
+
+#### Install docker prerequisites
+
+```
+sudo apt-get update
+sudo apt-get remove docker docker-engine docker.io
+sudo apt-get install linux-image-extra-$(uname -r) linux-image-extra-virtual
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+```
+#### Set up docker's apt repository
+
+```
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo tee /etc/apt/sources.list.d/docker.list <<EOM
+deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+EOM
+
+sudo apt-get update
+```
+
+#### Install docker
+
+```
+sudo apt-get install docker-ce
+```
+
+### Docker user - Creation
+
+```
+sudo usermod -a -G docker oobuilder
+```
+
+### Docker user - Re-login
+
+In order to be able to use Docker properly from `oobuilder` user you might need to logout and then login to your user.
+You might find how to enforce the user Docker group rights without logging out if you search enough but most of the times it's easier to just logout and login.
+
+### Docker user - Hello world
+
+Also make sure to run the usual 'Hello world' docker examples under the `oobuilder` user.
+These 'Hello world' docker examples are usually explained in most of the docker installation manuals.
+If 'Hello world' docker example does not work as expected then building thanks to our Dockerfiles will definitely not work.
+
+### Git ssh keys
+
+*Note: The commands below need to be run as the `oobuilder` user.*
+
+You need to run the command below in order to create a key.
+
+```
+ssh-keygen -t rsa -b 4096 -C "zimbra-builder@domain.com"
+```
+
+the email address needs to be the one used for your GitHub account.
+
+Then upload the `id_rsa.pub` key to your GitHub profile: [https://github.com/settings/keys](https://github.com/settings/keys).
+
+Note: I personally only use an additional Github account because you cannot set this SSH key as a read-only one. You are supposed to use a deploy key but those are attached to a single repo or organisation.
 
 ### Build from build virtual machine (Optional)
 
