@@ -46,6 +46,9 @@ Now you can find and replace the following:
 - Find all the `@@ACMEOO@@` strings and replace them to your Github organisation/user. Example: `acmeoo`.
 - Find all the `@@ACME@@` strings and replace them to your branding (no spaces or fancy characters). Example: `acme`. This will be used for both Git tags and Debian package suffix.
 - Find all the `@@OOBUILDER@@` strings and replace them to your docker enabled user. Example: `oobuilder`.
+- Given a **x.y.z.t** version that you want to build: ( Example: `8.1.2.3` )
+  - Find all the `@@VERSION-X.Y.Z@@` strings and replace them to **x.y.z**. Example: `8.1.2`
+  - Find all the `@@VERSION-T@@` strings and replace them to **t**. Example: `3`
 
 ## Github - Fork time
 
