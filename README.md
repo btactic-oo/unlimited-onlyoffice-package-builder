@@ -52,5 +52,5 @@ cd unlimited-onlyoffice-package-builder
 
 ## More technical docs
 
-- [README-BUILD-DEBIAN-PACKAGE-NO-LIMITS.md](README-BUILD-DEBIAN-PACKAGE-NO-LIMITS.md)
+- [README-BUILD-NEWER-VERSIONS.md](README-BUILD-NEWER-VERSIONS.md)
 - [development_logs](development_logs/)
