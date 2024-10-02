@@ -298,47 +298,7 @@ git tag -a 'v8.1.3.3-tacme' -m '8.1.3.3-tacme'
 git push origin v8.1.3.3-tacme
 ```
 
-## Introduction
-This is a simplified log of how we managed to bring out the 'No limits' version of OnlyOffice for those of you that like technical articles.
-
-- It's 2024 September and we need to build OnlyOffice 8.1.3.3.
-
-- Please remember: **This is not a Docker build that you can use in production. This is a Docker system that let's you build a Debian package binary.**
-
-You are also advised to check: [README-BUILD-DEBIAN-PACKAGE-NO-LIMITS.md](README-BUILD-DEBIAN-PACKAGE-NO-LIMITS.md) which are more straight-forward build and **use** instructions.
-
-## Initial tasks TODO
-
-- Internal build system is already there. No need to build it again.
-  - Debian 11 Netinst was choosen (Any other Debian based distro which supports docker should also be fine).
-  - Required RAM: 16 GB RAM (Minimum) or 8 GB RAM with 8 GB SWAP.
-  - Recommended: 50 GB Hard disk space
-
-- As we did before we should be able to build stuff thanks to `document-server-package` repo without almost no changes.
-
-- Create custom `build_tools` tag so that it uses our `server` and `web-apps` repo with our patch.
-
-- Create custom `server` branch with our patches (connection limits increase).
-
-- Create custom `web-apps` branch with our patches (mobile edit).
-
-- Check what packages are available in the official Debian/Ubuntu repository so that we use that exact version.
-
-- Update github documentation.
-
-- Update Nextcloud forum post.
-
-- Update www.btactic.com post or create a new one.
-
-- Update Bibliography if needed.
-
-## Development log
-
-### VM Snapshot
-
-Snapshot our build virtual machine so that we can revert to initial state when needed.
-
-### Official OnlyOffice package version
+### Official OnlyOffice package version (ONLYM)
 
 Our onlyoffice virtual machine for tests already has a repo.
 OnlyOffice guys never update the default one so no bother to update it or any of the directories it's using.
@@ -349,22 +309,20 @@ sudo apt-cache show onlyoffice-documentserver | less
 ```
 The most recent 8.1.3 version is:
 
-8.1.3-4
+8.1.3-3
 
 so that's the version that we will be using.
-Well, we will be using 8.1.3.3 instead because 8.1.3.4 is not available.
+We just replace the hyphen with a dot. 8.1.3-3 is now: 8.1.3.3.
 
 ## Decide where to build
 
-If you want to build in your own VPS please check the following sections:
+If you want to build in your own VPS please check:
 
 - [Build machine setup (BUILDM)](#build-machine-setup-buildm)
-- **TODO**
 
-If you want to build in Github please check the following sections:
+If you want to build in Github please check:
 
-- **TODO**
-- **TODO**
+- [Release based on Github Actions (DESKTOPM)](#release-based-on-github-actions-desktopm)
 
 ## Build machine setup (BUILDM)
 
@@ -474,6 +432,8 @@ git checkout v0.0.1
 
 The final `onlyoffice-documentserver_8.1.3-3-tacme_amd64.deb` deb package can be found at: `~/build-oo/unlimited-onlyoffice-package-builder/document-server-package/deb/` directory.
 
+If you wanted to build in your own VPS **you are done.**
+
 ## Release based on Github Actions (DESKTOPM)
 
 ### Enable Github Actions
@@ -504,6 +464,10 @@ git push origin 'builds-debian-11/8.1.3.3'
 .
 
 Release based on Github Actions which you can check in: [https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions](https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions) should end succesfully after about 2h30m build time.
+
+Check the new release at: [https://github.com/acmeoo/unlimited-onlyoffice-package-builder/releases](https://github.com/acmeoo/unlimited-onlyoffice-package-builder/releases).
+
+If you wanted to build in Github **you are done.**
 
 ## Words of wisdom
 
