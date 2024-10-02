@@ -43,9 +43,9 @@ Make sure to download this document, make a copy of it and edit it.
 
 Now you can find and replace the following:
 
-- Find `acmeoo` and replace it to your Github organisation/user. Example: `scriptkiddy`.
-- Find `tacme` and replace it to your branding (no spaces or fancy characters). Example: `looney` . This will be used for both Git tags and Debian package suffix.
-- Find `oobuilder` and replace it to your docker enabled user. Example: `lobuilder` .
+- Find all the `@@ACMEOO@@` strings and replace them to your Github organisation/user. Example: `acmeoo`.
+- Find all the `@@ACME@@` strings and replace them to your branding (no spaces or fancy characters). Example: `acme`. This will be used for both Git tags and Debian package suffix.
+- Find all the `@@OOBUILDER@@` strings and replace them to your docker enabled user. Example: `oobuilder`.
 
 ## Github - Fork time
 
@@ -61,7 +61,7 @@ You should know how to login onto your Github account. Go ahead and login there.
 
 - Visit [btactic-oo's unlimited-onlyoffice-package-builder repo](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder).
 - Click on **Fork** button.
-- Select `acmeoo` as the Owner.
+- Select `@@ACMEOO@@` as the Owner.
 - Uncheck 'Copy the main branch only'
 - **Do not modify** Repository name
 - Click on **Create fork** button
@@ -70,7 +70,7 @@ You should know how to login onto your Github account. Go ahead and login there.
 
 - Visit [ONLYOFFICE's build_tools repo](https://github.com/ONLYOFFICE/build_tools).
 - Click on **Fork** button.
-- Select `acmeoo` as the Owner.
+- Select `@@ACMEOO@@` as the Owner.
 - Uncheck 'Copy the main branch only'
 - **Do not modify** Repository name
 - Click on **Create fork** button
@@ -79,7 +79,7 @@ You should know how to login onto your Github account. Go ahead and login there.
 
 - Visit [ONLYOFFICE's server repo](https://github.com/ONLYOFFICE/server).
 - Click on **Fork** button.
-- Select `acmeoo` as the Owner.
+- Select `@@ACMEOO@@` as the Owner.
 - Uncheck 'Copy the main branch only'
 - **Do not modify** Repository name
 - Click on **Create fork** button
@@ -88,7 +88,7 @@ You should know how to login onto your Github account. Go ahead and login there.
 
 - Visit [ONLYOFFICE's web-apps repo](https://github.com/ONLYOFFICE/web-apps).
 - Click on **Fork** button.
-- Select `acmeoo` as the Owner.
+- Select `@@ACMEOO@@` as the Owner.
 - Uncheck 'Copy the main branch only'
 - **Do not modify** Repository name
 - Click on **Create fork** button
@@ -115,28 +115,28 @@ You can actuall skip this step but it's nice to have actual repos in your comput
 
 ```
 cd ~/onlyoffice_repos
-git clone git@github.com:acmeoo/unlimited-onlyoffice-package-builder.git
+git clone git@github.com:@@ACMEOO@@/unlimited-onlyoffice-package-builder.git
 ```
 
 ### Clone your own build_tools repo
 
 ```
 cd ~/onlyoffice_repos
-git clone git@github.com:acmeoo/build_tools.git
+git clone git@github.com:@@ACMEOO@@/build_tools.git
 ```
 
 ### Clone your own server repo
 
 ```
 cd ~/onlyoffice_repos
-git clone git@github.com:acmeoo/server.git
+git clone git@github.com:@@ACMEOO@@/server.git
 ```
 
 ### Clone your own web-apps repo
 
 ```
 cd ~/onlyoffice_repos
-git clone git@github.com:acmeoo/web-apps.git
+git clone git@github.com:@@ACMEOO@@/web-apps.git
 ```
 
 ## Add upstream and btactic repos as remotes (DESKTOPM)
@@ -214,7 +214,7 @@ We create a new branch based on the recently fetched tag.
 
 ```
 cd ~/onlyoffice_repos/build_tools
-git checkout tags/v8.1.3.3 -b 8.1.3.3-tacme
+git checkout tags/v8.1.3.3 -b 8.1.3.3-@@ACME@@
 ```
 
 Cherry-pick what we already had:
@@ -227,8 +227,8 @@ git cherry-pick 7da607da885285fe3cfc9feaf37b1608666039eb
 
 Find and replace btactic organisation and its suffix with our own:
 ```
-sed -i 's/unlimited_organization = "btactic-oo"/unlimited_organization = "acmeoo"/g' scripts/base.py
-sed -i 's/unlimited_tag_suffix = "-btactic"/unlimited_tag_suffix = "-tacme"/g' scripts/base.py
+sed -i 's/unlimited_organization = "btactic-oo"/unlimited_organization = "@@ACMEOO@@"/g' scripts/base.py
+sed -i 's/unlimited_tag_suffix = "-btactic"/unlimited_tag_suffix = "-@@ACME@@"/g' scripts/base.py
 ```
 .
 
@@ -241,9 +241,9 @@ git commit --amend --no-edit
 Let's push and create appropiate tags:
 
 ```
-git push origin 8.1.3.3-tacme
-git tag -a 'v8.1.3.3-tacme' -m '8.1.3.3-tacme'
-git push origin v8.1.3.3-tacme
+git push origin 8.1.3.3-@@ACME@@
+git tag -a 'v8.1.3.3-@@ACME@@' -m '8.1.3.3-@@ACME@@'
+git push origin v8.1.3.3-@@ACME@@
 ```
 
 ### server repo update
@@ -256,7 +256,7 @@ We create a new branch based on the recently fetched tag.
 
 ```
 cd ~/onlyoffice_repos/server
-git checkout tags/v8.1.3.3 -b 8.1.3.3-tacme
+git checkout tags/v8.1.3.3 -b 8.1.3.3-@@ACME@@
 ```
 .
 
@@ -269,9 +269,9 @@ git cherry-pick cb6100664657bc91a8bae82d005f00dcc0092a9c
 Let's push and create appropiate tags:
 
 ```
-git push origin 8.1.3.3-tacme
-git tag -a 'v8.1.3.3-tacme' -m '8.1.3.3-tacme'
-git push origin v8.1.3.3-tacme
+git push origin 8.1.3.3-@@ACME@@
+git tag -a 'v8.1.3.3-@@ACME@@' -m '8.1.3.3-@@ACME@@'
+git push origin v8.1.3.3-@@ACME@@
 ```
 
 ### web-apps repo update
@@ -284,7 +284,7 @@ We create a new branch based on the recently fetched tag.
 
 ```
 cd ~/onlyoffice_repos/web-apps
-git checkout tags/v8.1.3.3 -b 8.1.3.3-tacme
+git checkout tags/v8.1.3.3 -b 8.1.3.3-@@ACME@@
 ```
 .
 
@@ -297,9 +297,9 @@ git cherry-pick 2d186b887bd1f445ec038bd9586ba7da3471ba05
 Let's push and create appropiate tags:
 
 ```
-git push origin 8.1.3.3-tacme
-git tag -a 'v8.1.3.3-tacme' -m '8.1.3.3-tacme'
-git push origin v8.1.3.3-tacme
+git push origin 8.1.3.3-@@ACME@@
+git tag -a 'v8.1.3.3-@@ACME@@' -m '8.1.3.3-@@ACME@@'
+git push origin v8.1.3.3-@@ACME@@
 ```
 
 ### Official OnlyOffice package version (ONLYM)
@@ -379,28 +379,28 @@ sudo apt-get install docker-ce
 ### Docker user - Creation
 
 ```
-sudo usermod -a -G docker oobuilder
+sudo usermod -a -G docker @@OOBUILDER@@
 ```
 
 ### Docker user - Re-login
 
-In order to be able to use Docker properly from `oobuilder` user you might need to logout and then login to your user.
+In order to be able to use Docker properly from `@@OOBUILDER@@` user you might need to logout and then login to your user.
 You might find how to enforce the user Docker group rights without logging out if you search enough but most of the times it's easier to just logout and login.
 
 ### Docker user - Hello world
 
-Also make sure to run the usual 'Hello world' docker examples under the `oobuilder` user.
+Also make sure to run the usual 'Hello world' docker examples under the `@@OOBUILDER@@` user.
 These 'Hello world' docker examples are usually explained in most of the docker installation manuals.
 If 'Hello world' docker example does not work as expected then building thanks to our Dockerfiles will definitely not work.
 
 ### Git ssh keys
 
-*Note: The commands below need to be run as the `oobuilder` user.*
+*Note: The commands below need to be run as the `@@OOBUILDER@@` user.*
 
 You need to run the command below in order to create a key.
 
 ```
-ssh-keygen -t rsa -b 4096 -C "oobuilder@domain.com"
+ssh-keygen -t rsa -b 4096 -C "@@OOBUILDER@@@domain.com"
 ```
 
 the email address needs to be the one used for your GitHub account.
@@ -420,21 +420,21 @@ should do it in most of the Debian/Ubuntu systems so that you can later use Git.
 
 ### Build everything
 
-As the `oobuilder` user run:
+As the `@@OOBUILDER@@` user run:
 
 ```
 mkdir ~/build-oo
 cd ~/build-oo
-git clone https://github.com/acmeoo/unlimited-onlyoffice-package-builder
+git clone https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder
 cd unlimited-onlyoffice-package-builder
 git checkout v0.0.1
 # Ignore detached HEAD message
-./onlyoffice-package-builder.sh --product-version=8.1.3 --build-number=3 --unlimited-organization=acmeoo --tag-suffix=-tacme --debian-package-suffix=-tacme
+./onlyoffice-package-builder.sh --product-version=8.1.3 --build-number=3 --unlimited-organization=@@ACMEOO@@ --tag-suffix=-@@ACME@@ --debian-package-suffix=-@@ACME@@
 ```
 
 ### Final deb package
 
-The final `onlyoffice-documentserver_8.1.3-3-tacme_amd64.deb` deb package can be found at: `~/build-oo/unlimited-onlyoffice-package-builder/document-server-package/deb/` directory.
+The final `onlyoffice-documentserver_8.1.3-3-@@ACME@@_amd64.deb` deb package can be found at: `~/build-oo/unlimited-onlyoffice-package-builder/document-server-package/deb/` directory.
 
 If you wanted to build in your own VPS **you are done.**
 
@@ -442,17 +442,17 @@ If you wanted to build in your own VPS **you are done.**
 
 ### Enable Github Actions
 
-Visit [https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions](https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions) and click on the **I understand my workflows, go ahead and enable them** button.
+Visit [https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder/actions](https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder/actions) and click on the **I understand my workflows, go ahead and enable them** button.
 
 ### Use your repos when running Github Actions
 
 ```
 cd ~/onlyoffice_repos/unlimited-onlyoffice-package-builder
 git checkout main
-sed -i 's/DEBIAN_PACKAGE_SUFFIX: -btactic/DEBIAN_PACKAGE_SUFFIX: -tacme/g' .github/workflows/build-release-debian-11.yml
-sed -i 's/TAG_SUFFIX: -btactic/TAG_SUFFIX: -tacme/g' .github/workflows/build-release-debian-11.yml
+sed -i 's/DEBIAN_PACKAGE_SUFFIX: -btactic/DEBIAN_PACKAGE_SUFFIX: -@@ACME@@/g' .github/workflows/build-release-debian-11.yml
+sed -i 's/TAG_SUFFIX: -btactic/TAG_SUFFIX: -@@ACME@@/g' .github/workflows/build-release-debian-11.yml
 git add .github/workflows/build-release-debian-11.yml
-git commit -m 'Use tacme as a suffix in Github Actions'
+git commit -m 'Use @@ACME@@ as a suffix in Github Actions'
 git push origin main
 ```
 
@@ -467,9 +467,9 @@ git push origin 'builds-debian-11/8.1.3.3'
 ```
 .
 
-Release based on Github Actions which you can check in: [https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions](https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions) should end succesfully after about 2h30m build time.
+Release based on Github Actions which you can check in: [https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder/actions](https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder/actions) should end succesfully after about 2h30m build time.
 
-Check the new release at: [https://github.com/acmeoo/unlimited-onlyoffice-package-builder/releases](https://github.com/acmeoo/unlimited-onlyoffice-package-builder/releases).
+Check the new release at: [https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder/releases](https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder/releases).
 
 If you wanted to build in Github **you are done.**
 
