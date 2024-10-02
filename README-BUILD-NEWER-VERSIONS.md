@@ -188,18 +188,19 @@ This **ONLYM** machine needs to have installed the [limited onlyoffice deb packa
 
 ## Identify tag to build (ONLYM)
 
+Our onlyoffice virtual machine should already have installed Debian package in it.
 OnlyOffice guys never update the default one so no bother to update it or any of the directories it's using.
 
 ```
 sudo apt update
 sudo apt-cache show onlyoffice-documentserver | less
 ```
-The most recent 8.1.3 version is:
+The most recent @@VERSION-X.Y.Z@@ version is:
 
-8.1.3-4
+@@VERSION-X.Y.Z@@-3
 
 so that's the version that we will be using.
-Well, we will be using **8.1.3.3** instead because 8.1.3.4 is not available.
+We just replace the hyphen with a dot. @@VERSION-X.Y.Z@@-3 is now: @@VERSION-X.Y.Z@@.3.
 
 ## Apply no-limits to our repos (DESKTOPM)
 
@@ -214,7 +215,7 @@ We create a new branch based on the recently fetched tag.
 
 ```
 cd ~/onlyoffice_repos/build_tools
-git checkout tags/v8.1.3.3 -b 8.1.3.3-@@ACME@@
+git checkout tags/v@@VERSION-X.Y.Z@@.3 -b @@VERSION-X.Y.Z@@.3-@@ACME@@
 ```
 
 Cherry-pick what we already had:
@@ -241,9 +242,9 @@ git commit --amend --no-edit
 Let's push and create appropiate tags:
 
 ```
-git push origin 8.1.3.3-@@ACME@@
-git tag -a 'v8.1.3.3-@@ACME@@' -m '8.1.3.3-@@ACME@@'
-git push origin v8.1.3.3-@@ACME@@
+git push origin @@VERSION-X.Y.Z@@.3-@@ACME@@
+git tag -a 'v@@VERSION-X.Y.Z@@.3-@@ACME@@' -m '@@VERSION-X.Y.Z@@.3-@@ACME@@'
+git push origin v@@VERSION-X.Y.Z@@.3-@@ACME@@
 ```
 
 ### server repo update
@@ -256,7 +257,7 @@ We create a new branch based on the recently fetched tag.
 
 ```
 cd ~/onlyoffice_repos/server
-git checkout tags/v8.1.3.3 -b 8.1.3.3-@@ACME@@
+git checkout tags/v@@VERSION-X.Y.Z@@.3 -b @@VERSION-X.Y.Z@@.3-@@ACME@@
 ```
 .
 
@@ -269,9 +270,9 @@ git cherry-pick cb6100664657bc91a8bae82d005f00dcc0092a9c
 Let's push and create appropiate tags:
 
 ```
-git push origin 8.1.3.3-@@ACME@@
-git tag -a 'v8.1.3.3-@@ACME@@' -m '8.1.3.3-@@ACME@@'
-git push origin v8.1.3.3-@@ACME@@
+git push origin @@VERSION-X.Y.Z@@.3-@@ACME@@
+git tag -a 'v@@VERSION-X.Y.Z@@.3-@@ACME@@' -m '@@VERSION-X.Y.Z@@.3-@@ACME@@'
+git push origin v@@VERSION-X.Y.Z@@.3-@@ACME@@
 ```
 
 ### web-apps repo update
@@ -284,7 +285,7 @@ We create a new branch based on the recently fetched tag.
 
 ```
 cd ~/onlyoffice_repos/web-apps
-git checkout tags/v8.1.3.3 -b 8.1.3.3-@@ACME@@
+git checkout tags/v@@VERSION-X.Y.Z@@.3 -b @@VERSION-X.Y.Z@@.3-@@ACME@@
 ```
 .
 
@@ -297,26 +298,10 @@ git cherry-pick 2d186b887bd1f445ec038bd9586ba7da3471ba05
 Let's push and create appropiate tags:
 
 ```
-git push origin 8.1.3.3-@@ACME@@
-git tag -a 'v8.1.3.3-@@ACME@@' -m '8.1.3.3-@@ACME@@'
-git push origin v8.1.3.3-@@ACME@@
+git push origin @@VERSION-X.Y.Z@@.3-@@ACME@@
+git tag -a 'v@@VERSION-X.Y.Z@@.3-@@ACME@@' -m '@@VERSION-X.Y.Z@@.3-@@ACME@@'
+git push origin v@@VERSION-X.Y.Z@@.3-@@ACME@@
 ```
-
-### Official OnlyOffice package version (ONLYM)
-
-Our onlyoffice virtual machine for tests already has a repo.
-OnlyOffice guys never update the default one so no bother to update it or any of the directories it's using.
-
-```
-sudo apt update
-sudo apt-cache show onlyoffice-documentserver | less
-```
-The most recent 8.1.3 version is:
-
-8.1.3-3
-
-so that's the version that we will be using.
-We just replace the hyphen with a dot. 8.1.3-3 is now: 8.1.3.3.
 
 ## Decide where to build
 
@@ -429,12 +414,12 @@ git clone https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder
 cd unlimited-onlyoffice-package-builder
 git checkout v0.0.1
 # Ignore detached HEAD message
-./onlyoffice-package-builder.sh --product-version=8.1.3 --build-number=3 --unlimited-organization=@@ACMEOO@@ --tag-suffix=-@@ACME@@ --debian-package-suffix=-@@ACME@@
+./onlyoffice-package-builder.sh --product-version=@@VERSION-X.Y.Z@@ --build-number=3 --unlimited-organization=@@ACMEOO@@ --tag-suffix=-@@ACME@@ --debian-package-suffix=-@@ACME@@
 ```
 
 ### Final deb package
 
-The final `onlyoffice-documentserver_8.1.3-3-@@ACME@@_amd64.deb` deb package can be found at: `~/build-oo/unlimited-onlyoffice-package-builder/document-server-package/deb/` directory.
+The final `onlyoffice-documentserver_@@VERSION-X.Y.Z@@-3-@@ACME@@_amd64.deb` deb package can be found at: `~/build-oo/unlimited-onlyoffice-package-builder/document-server-package/deb/` directory.
 
 If you wanted to build in your own VPS **you are done.**
 
@@ -462,8 +447,8 @@ git push origin main
 cd ~/onlyoffice_repos/unlimited-onlyoffice-package-builder
 git checkout main
 git push origin main # Just to be safe
-git tag -a 'builds-debian-11/8.1.3.3' -m 'builds-debian-11/8.1.3.3'
-git push origin 'builds-debian-11/8.1.3.3'
+git tag -a 'builds-debian-11/@@VERSION-X.Y.Z@@.3' -m 'builds-debian-11/@@VERSION-X.Y.Z@@.3'
+git push origin 'builds-debian-11/@@VERSION-X.Y.Z@@.3'
 ```
 .
 
@@ -494,7 +479,7 @@ This is not an official onlyoffice build. Do not seek for help on OnlyOffice iss
 ## Useful links
 
 - [https://www.btactic.com/build-onlyoffice-from-source-code-2023/?lang=en](https://www.btactic.com/build-onlyoffice-from-source-code-2023/?lang=en)
-- [https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/releases/tag/onlyoffice-unlimited-build-debian-11%2F8.1.3.3](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/releases/tag/onlyoffice-unlimited-build-debian-11%2F8.1.3.3)
+- [https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/releases/tag/onlyoffice-unlimited-build-debian-11%2F@@VERSION-X.Y.Z@@.3](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/releases/tag/onlyoffice-unlimited-build-debian-11%2F@@VERSION-X.Y.Z@@.3)
 - [https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/tree/main/development_logs](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/tree/main/development_logs)
 
 ## Feedback
