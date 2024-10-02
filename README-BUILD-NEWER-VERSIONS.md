@@ -13,7 +13,7 @@ Please [create a new issue of your experience](https://github.com/btactic-oo/unl
 
 You will be able to produce a Debian 11 DEB package that might also work on other Debian/Ubuntu systems.
 
-If you already followed these instructions, you reuse your DESKTOPM machine and you want to build a newer Onlyoffice version you can skip to the: **Update and Fetch newest tags (DESKTOPM)** section.
+If you have already followed these instructions and you are reusing your DESKTOPM machine and you want to build a newer Onlyoffice version you can skip to the: [Update and Fetch newest tags (DESKTOPM)](#update-and-fetch-newest-tags-desktopm) section.
 
 ## About development logs
 
