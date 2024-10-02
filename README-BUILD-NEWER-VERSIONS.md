@@ -358,7 +358,7 @@ Well, we will be using 8.1.3.3 instead because 8.1.3.4 is not available.
 
 If you want to build in your own VPS please check the following sections:
 
-- Build machine setup (BUILDM)
+- [Build machine setup (BUILDM)](#build-machine-setup-buildm)
 - **TODO**
 
 If you want to build in Github please check the following sections:
@@ -371,6 +371,12 @@ If you want to build in Github please check the following sections:
 ### About the build machine setup section
 
 Please notice that if you decide to build directly from Github Actions this build machine won't be needed at all so you can skip this section altogether.
+
+### Requisites
+
+- Debian 11 Netinst was choosen (Any other Debian based distro which supports docker should also be fine).
+- Required RAM: 16 GB RAM (Minimum) or 8 GB RAM with 8 GB SWAP.
+- Recommended: 50 GB Hard disk space
 
 ### Docker-CE Requisite
 
@@ -448,22 +454,25 @@ apt install git
 ```
 should do it in most of the Debian/Ubuntu systems so that you can later use Git.
 
-### Build from build virtual machine (Optional)
+## Build (BUILDM)
 
-This virtual machine has Docker (Docker-CE not whatever RHEL based distros install) installed in it.
-And its build user can run docker commands.
+### Build everything
+
+As the `oobuilder` user run:
 
 ```
 mkdir ~/build-oo
 cd ~/build-oo
-git clone https://github.com/btactic-oo/unlimited-onlyoffice-package-builder
+git clone https://github.com/acmeoo/unlimited-onlyoffice-package-builder
 cd unlimited-onlyoffice-package-builder
-./onlyoffice-package-builder.sh --product-version=8.1.3 --build-number=3 --unlimited-organization=btactic-oo --tag-suffix=-btactic --debian-package-suffix=-btactic
+git checkout v0.0.1
+# Ignore detached HEAD message
+./onlyoffice-package-builder.sh --product-version=8.1.3 --build-number=3 --unlimited-organization=acmeoo --tag-suffix=-tacme --debian-package-suffix=-tacme
 ```
 
-### Final package (Optional)
+### Final deb package
 
-The final `onlyoffice-documentserver_8.1.3-3-btactic_amd64.deb` deb package can be found at: `~/build-oo/unlimited-onlyoffice-package-builder/document-server-package/deb/` directory.
+The final `onlyoffice-documentserver_8.1.3-3-tacme_amd64.deb` deb package can be found at: `~/build-oo/unlimited-onlyoffice-package-builder/document-server-package/deb/` directory.
 
 ### Release (Based on Github Actions)
 
