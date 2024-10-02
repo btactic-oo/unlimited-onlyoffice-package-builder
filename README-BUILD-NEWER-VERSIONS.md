@@ -37,12 +37,21 @@ or in another words (with their own alias):
 - An onlyoffice build GNU/Linux machine (**BUILDM**)
 - An onlyoffice installed machine thanks to official repo packages (**ONLYM**)
 
+## Find an replace
+
+Make sure to download this document, make a copy of it and edit it.
+
+Now you can find and replace the following:
+
+- Find `acmeoo` and replace it to your Github organisation/user. Example: `scriptkiddy`.
+- Find `tacme` and replace it to your branding (no spaces or fancy characters). Example: `looney` . This will be used for both Git tags and Debian package suffix.
+- Find `oobuilder` and replace it to your docker enabled user. Example: `lobuilder` .
+
 ## Github - Fork time
 
-First of all you need to create a Github account/user, a Github organisation, or reuse your existant Github account/user.
+### Github - Create organisation or user
 
-Please notice that this new/reused account/user/organisation will be called `acmeoo` in this document.
-Feel free to download this document locally and find `acmeoo` in it and **replace it to your own new/reused account/user/organisation**.
+First of all you need to create a Github account/user, a Github organisation, or reuse your existant Github account/user.
 
 ### Login onto your Github account
 
@@ -193,11 +202,6 @@ so that's the version that we will be using.
 Well, we will be using **8.1.3.3** instead because 8.1.3.4 is not available.
 
 ## Apply no-limits to our repos (DESKTOPM)
-
-### Tag naming
-
-This document assumes that your tag naming is `tacme`.
-Feel free to download this document locally and find `tacme` in it and **replace it to your own tag name**.
 
 ### build_tools repo update
 
@@ -396,7 +400,7 @@ If 'Hello world' docker example does not work as expected then building thanks t
 You need to run the command below in order to create a key.
 
 ```
-ssh-keygen -t rsa -b 4096 -C "zimbra-builder@domain.com"
+ssh-keygen -t rsa -b 4096 -C "oobuilder@domain.com"
 ```
 
 the email address needs to be the one used for your GitHub account.
