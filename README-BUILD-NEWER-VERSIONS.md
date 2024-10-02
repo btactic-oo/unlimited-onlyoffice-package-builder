@@ -474,12 +474,16 @@ git checkout v0.0.1
 
 The final `onlyoffice-documentserver_8.1.3-3-tacme_amd64.deb` deb package can be found at: `~/build-oo/unlimited-onlyoffice-package-builder/document-server-package/deb/` directory.
 
-### Release (Based on Github Actions)
+## Release based on Github Actions (DESKTOPM)
 
-We should be able to build and publish a release in our `unlimited-onlyoffice-package-builder` repo thanks to:
+### Enable Github Actions
+
+Visit [https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions](https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions) and click on the **I understand my workflows, go ahead and enable them** button.
+
+### Push to build
 
 ```
-cd onlyoffice_repos/unlimited-onlyoffice-package-builder
+cd ~/onlyoffice_repos/unlimited-onlyoffice-package-builder
 git checkout main
 git push origin main # Just to be safe
 git tag -a 'builds-debian-11/8.1.3.3' -m 'builds-debian-11/8.1.3.3'
@@ -487,7 +491,25 @@ git push origin 'builds-debian-11/8.1.3.3'
 ```
 .
 
-Release based on Github Actions **went ok** after 2h30m build time.
+Release based on Github Actions should end succesfully after about 2h30m build time.
+
+## Words of wisdom
+
+- If you want feedback please make sure to describe:
+  - How docker is installed on your VPS
+  - What are the exact commands that you run
+- OnlyOffice guys are not using the public tools published here to build their binaries, they use another set of tools which, in theory, should work quite similar.
+- You are advised somewhere in the build documentation to use the master branch but you should stick to a tag so that you always get the same results.
+- Unfortunately a lot of external dependencies of OnlyOffice are based not on tags (specific versions) but on master branches. **That's a big bug on their part.**
+- So, even if you manage to build OnlyOffice one day without OnlyOffice repos being changed it might fail the next day because of some external dependency having changed a lot or being temporarily down.
+- If you live in countries similar to Russia or China you might not have to access to some of those external dependencies because of geo-blocking issues.
+- The same might happen if you don't have an stable internet connection. The build system does not allow to easily re-run just the latest step which failed because of an Internet timeout.
+- You also have to know that when a build step has failed it's much better for you to start from scratch than try to resume the build. That failure might avoid you to build everything ok again. Well, at least try it once more from an empty folder.
+- You need enough RAM. This is known to fail with only 4 GB RAM. It works for me with 16 GB RAM.
+
+## Warning
+
+This is not an official onlyoffice build. Do not seek for help on OnlyOffice issues/forums unless you replicate it on original source code or original binaries from them.
 
 ## Useful links
 
@@ -495,39 +517,3 @@ Release based on Github Actions **went ok** after 2h30m build time.
 - [https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/releases/tag/onlyoffice-unlimited-build-debian-11%2F8.1.3.3](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/releases/tag/onlyoffice-unlimited-build-debian-11%2F8.1.3.3)
 - [https://github.com/btactic-oo/document-server-package/blob/btactic-documentation/README-BUILD-DEBIAN-PACKAGE-NO-LIMITS.md](https://github.com/btactic/document-server-package/blob/btactic-documentation/README-BUILD-DEBIAN-PACKAGE-NO-LIMITS.md)
 - [https://github.com/btactic-oo/document-server-package/blob/btactic-documentation/onlyoffice-no-limits-2023-01.md](https://github.com/btactic/document-server-package/blob/btactic-documentation/onlyoffice-no-limits-2023-01.md)
-
-## Additional developer notes
-
-- Fork OnlyOffice repos from Github UI
-
-- Then clone the repos from your own username/organisation
-
-- Onlyoffice remote for server repo:
-```
-cd onlyoffice_repos/server
-git remote add upstream-origin git@github.com:ONLYOFFICE/server.git
-```
-
-- Onlyoffice remote for build_tools repo:
-```
-cd onlyoffice_repos/build_tools
-git remote add upstream-origin git@github.com:ONLYOFFICE/build_tools.git
-```
-
-- Onlyoffice remote for document-server-package repo:
-```
-cd onlyoffice_repos/document-server-package
-git remote add upstream-origin git@github.com:ONLYOFFICE/document-server-package.git
-```
-
-- Onlyoffice remote for web-apps repo:
-```
-cd onlyoffice_repos/web-apps
-git remote add upstream-origin git@github.com:ONLYOFFICE/web-apps.git
-```
-
-- Use screen, byobu or tmux when building in your virtual machine so that build is not lost because of a network disconnection
-
-## Warning
-
-This is not an official onlyoffice build. Do not seek for help on OnlyOffice issues/forums unless you replicate it on original source code or original binaries from them.
