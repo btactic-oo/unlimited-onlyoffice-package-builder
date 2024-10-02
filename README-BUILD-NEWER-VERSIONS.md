@@ -480,6 +480,18 @@ The final `onlyoffice-documentserver_8.1.3-3-tacme_amd64.deb` deb package can be
 
 Visit [https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions](https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions) and click on the **I understand my workflows, go ahead and enable them** button.
 
+### Use your repos when running Github Actions
+
+```
+cd ~/onlyoffice_repos/unlimited-onlyoffice-package-builder
+git checkout main
+sed -i 's/DEBIAN_PACKAGE_SUFFIX: -btactic/DEBIAN_PACKAGE_SUFFIX: -tacme/g' .github/workflows/build-release-debian-11.yml
+sed -i 's/TAG_SUFFIX: -btactic/TAG_SUFFIX: -tacme/g' .github/workflows/build-release-debian-11.yml
+git add .github/workflows/build-release-debian-11.yml
+git commit -m 'Use tacme as a suffix in Github Actions'
+git push origin main
+```
+
 ### Push to build
 
 ```
@@ -491,7 +503,7 @@ git push origin 'builds-debian-11/8.1.3.3'
 ```
 .
 
-Release based on Github Actions should end succesfully after about 2h30m build time.
+Release based on Github Actions which you can check in: [https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions](https://github.com/acmeoo/unlimited-onlyoffice-package-builder/actions) should end succesfully after about 2h30m build time.
 
 ## Words of wisdom
 
@@ -517,3 +529,7 @@ This is not an official onlyoffice build. Do not seek for help on OnlyOffice iss
 - [https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/releases/tag/onlyoffice-unlimited-build-debian-11%2F8.1.3.3](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/releases/tag/onlyoffice-unlimited-build-debian-11%2F8.1.3.3)
 - [https://github.com/btactic-oo/document-server-package/blob/btactic-documentation/README-BUILD-DEBIAN-PACKAGE-NO-LIMITS.md](https://github.com/btactic/document-server-package/blob/btactic-documentation/README-BUILD-DEBIAN-PACKAGE-NO-LIMITS.md)
 - [https://github.com/btactic-oo/document-server-package/blob/btactic-documentation/onlyoffice-no-limits-2023-01.md](https://github.com/btactic/document-server-package/blob/btactic-documentation/onlyoffice-no-limits-2023-01.md)
+
+## Feedback
+
+You can give feedback on how to improve this document at: [https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/issues/3](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/issues/3).
