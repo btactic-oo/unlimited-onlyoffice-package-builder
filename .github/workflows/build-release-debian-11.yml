@@ -60,7 +60,7 @@ jobs:
           df -h
       - name: Free Space - Remove docker images
         run: |
-          docker rmi $(docker image ls -aq)
+          docker rmi $(docker image ls -aq) || true
           df -h
       - name: Check out the repo
         uses: actions/checkout@v4
