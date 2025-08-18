@@ -16,8 +16,8 @@ If you have already followed these instructions and you are reusing your DESKTOP
 ## About development logs
 
 This specific documentation won't be updated so much.
-It will be based on the current latest simplified documentation which it's *2024 09*.
-Please check [development_logs/ directory](development_logs/). You might want to cherry-pick some commits from there instead of the *2024 09* ones which will be used here.
+It will be based on the current latest simplified documentation which it's *2025 08*.
+Please check [development_logs/ directory](development_logs/). You might want to cherry-pick some commits from there instead of the *2025 08* ones which will be used here.
 
 ## Requisites
 
@@ -209,8 +209,7 @@ We just replace the hyphen with a dot. @@VERSION-X.Y.Z@@-@@VERSION-T@@ is now: @
 
 Old stuff that we already have from btactic repos:
 
-- commit (owner changes in ssh): 7ce465ecb177fd20ebf2b459a69f98312f7a8d3d
-- commit (Custom repos and tags): 7da607da885285fe3cfc9feaf37b1608666039eb
+- commit (New tags override approach): f88a3ba5470664888bbf150d67ef0b31f74a6cbb
 
 We create a new branch based on the recently fetched tag.
 
@@ -222,8 +221,7 @@ git checkout tags/v@@VERSION-X.Y.Z@@.@@VERSION-T@@ -b @@VERSION-X.Y.Z@@.@@VERSIO
 Cherry-pick what we already had:
 
 ```
-git cherry-pick 7ce465ecb177fd20ebf2b459a69f98312f7a8d3d
-git cherry-pick 7da607da885285fe3cfc9feaf37b1608666039eb
+git cherry-pick f88a3ba5470664888bbf150d67ef0b31f74a6cbb
 ```
 .
 
@@ -252,7 +250,7 @@ git push origin v@@VERSION-X.Y.Z@@.@@VERSION-T@@-@@ACME@@
 
 Old stuff that we already have from btactic repos:
 
-- commit (connection limit): cb6100664657bc91a8bae82d005f00dcc0092a9c
+- commit (connection limit): 81db34dee17f8a6a364669232a8c7c2f5d36d81f
 
 We create a new branch based on the recently fetched tag.
 
@@ -265,7 +263,7 @@ git checkout tags/v@@VERSION-X.Y.Z@@.@@VERSION-T@@ -b @@VERSION-X.Y.Z@@.@@VERSIO
 Cherry-pick what we already had:
 
 ```
-git cherry-pick cb6100664657bc91a8bae82d005f00dcc0092a9c
+git cherry-pick 81db34dee17f8a6a364669232a8c7c2f5d36d81f
 ```
 
 Let's push and create appropiate tags:
@@ -280,7 +278,7 @@ git push origin v@@VERSION-X.Y.Z@@.@@VERSION-T@@-@@ACME@@
 
 Old stuff that we already have from btactic repos:
 
-- commit (mobile edit): 2d186b887bd1f445ec038bd9586ba7da3471ba05
+- commit (mobile edit): 140ef6d1d687532dcb03b05912838b8b4cf161a3
 
 We create a new branch based on the recently fetched tag.
 
@@ -293,7 +291,7 @@ git checkout tags/v@@VERSION-X.Y.Z@@.@@VERSION-T@@ -b @@VERSION-X.Y.Z@@.@@VERSIO
 Cherry-pick what we already had:
 
 ```
-git cherry-pick 2d186b887bd1f445ec038bd9586ba7da3471ba05
+git cherry-pick 140ef6d1d687532dcb03b05912838b8b4cf161a3
 ```
 
 Let's push and create appropiate tags:
@@ -413,7 +411,7 @@ mkdir ~/build-oo
 cd ~/build-oo
 git clone https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder
 cd unlimited-onlyoffice-package-builder
-git checkout v0.0.1
+git checkout v0.0.3
 # Ignore detached HEAD message
 ./onlyoffice-package-builder.sh --product-version=@@VERSION-X.Y.Z@@ --build-number=@@VERSION-T@@ --unlimited-organization=@@ACMEOO@@ --tag-suffix=-@@ACME@@ --debian-package-suffix=-@@ACME@@
 ```
