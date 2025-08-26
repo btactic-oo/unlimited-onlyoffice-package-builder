@@ -177,7 +177,11 @@ prepare_custom_repo() {
 
   while [ "$#" -gt 0 ]; do
     _ncommit=$1
-    git cherry-pick ${_ncommit}
+    if ! git cherry-pick "${_ncommit}"; then
+      echo "Error: cherry-pick of commit ${_ncommit} failed in ${_REPO}" >&2
+      echo "Aborting!"
+      exit 3
+    fi
     shift
   done
 
