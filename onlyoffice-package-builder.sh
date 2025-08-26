@@ -40,6 +40,11 @@ EOF
 BINARIES_ONLY="false"
 DEB_ONLY="false"
 
+UPSTREAM_ORGANIZATION="ONLYOFFICE"
+
+SERVER_CUSTOM_COMMITS="81db34dee17f8a6a364669232a8c7c2f5d36d81f"
+WEB_APPS_CUSTOM_COMMITS="140ef6d1d687532dcb03b05912838b8b4cf161a3"
+
 # Check the arguments.
 for option in "$@"; do
   case "$option" in
@@ -73,6 +78,11 @@ done
 
 BUILD_BINARIES="true"
 BUILD_DEB="true"
+
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit 1
+fi
 
 if [ ${BINARIES_ONLY} == "true" ] ; then
   BUILD_BINARIES="true"
@@ -146,6 +156,39 @@ EOF
   fi
 fi
 
+prepare_custom_repo() {
+
+  _REPO=$1
+  shift
+  _TAG=$1
+  shift
+  _UNLIMITED_ORGANIZATION=$1
+  shift
+  # Rest of arguments are commits to cherry-pick in order
+
+  git clone https://github.com/${_UNLIMITED_ORGANIZATION}/${_REPO}
+  cd ${_REPO}
+  git remote add upstream-origin https://github.com/${UPSTREAM_ORGANIZATION}/${_REPO}
+
+  git checkout master
+  git pull upstream-origin master
+  git fetch --all --tags
+  git checkout tags/${_TAG} -b ${_TAG}-custom
+
+  while [ "$#" -gt 0 ]; do
+    _ncommit=$1
+    git cherry-pick ${_ncommit}
+    shift
+  done
+
+  # Force our changes
+  git tag --delete ${_TAG}
+  git tag -a "${_TAG}" -m "${_TAG}"
+
+  cd ..
+
+}
+
 build_oo_binaries() {
 
   _OUT_FOLDER=$1 # out
@@ -157,11 +200,14 @@ build_oo_binaries() {
   _UPSTREAM_TAG="v${_PRODUCT_VERSION}.${_BUILD_NUMBER}"
   _UNLIMITED_ORGANIZATION_TAG="${_UPSTREAM_TAG}${_TAG_SUFFIX}"
 
+  prepare_custom_repo "server" "${_UPSTREAM_TAG}" "${_UNLIMITED_ORGANIZATION}" ${SERVER_CUSTOM_COMMITS}
+  prepare_custom_repo "web-apps" "${_UPSTREAM_TAG}" "${_UNLIMITED_ORGANIZATION}" ${WEB_APPS_CUSTOM_COMMITS}
+
   git clone \
     --depth=1 \
     --recursive \
-    --branch ${_UNLIMITED_ORGANIZATION_TAG} \
-    https://github.com/${_UNLIMITED_ORGANIZATION}/build_tools.git \
+    --branch ${_UPSTREAM_TAG} \
+    https://github.com/${UPSTREAM_ORGANIZATION}/build_tools.git \
     build_tools
   # Ignore detached head warning
   cd build_tools
@@ -169,10 +215,7 @@ build_oo_binaries() {
   docker build --tag onlyoffice-document-editors-builder .
   docker run -e PRODUCT_VERSION=${_PRODUCT_VERSION} -e BUILD_NUMBER=${_BUILD_NUMBER} -e NODE_ENV='production' -v $(pwd)/${_OUT_FOLDER}:/build_tools/out onlyoffice-document-editors-builder /bin/bash -c '\
     cd tools/linux && \
-    python3 ./automate.py \
-      --branch=tags/'"${_UPSTREAM_TAG}"' \
-      --repo-overrides=server=https://github.com/'"${_UNLIMITED_ORGANIZATION}"'/server.git,web-apps=https://github.com/'"${_UNLIMITED_ORGANIZATION}"'/web-apps.git \
-      --repo-branch-overrides=server=tags/'"${_UNLIMITED_ORGANIZATION_TAG}"',web-apps=tags/'"${_UNLIMITED_ORGANIZATION_TAG}"
+    python3 ./automate.py --branch=tags/'"${_UPSTREAM_TAG}"
   cd ..
 
 }
