@@ -175,6 +175,10 @@ prepare_custom_repo() {
   git fetch --all --tags
   git checkout tags/${_TAG} -b ${_TAG}-custom
 
+  # Hard-code temp git user.name and user.email for this local cherry-picked commit
+  git config user.name 'CherryPick User'
+  git config user.email 'cherrypick@btacticoo.com'
+
   while [ "$#" -gt 0 ]; do
     _ncommit=$1
     if ! git cherry-pick "${_ncommit}"; then
