@@ -17,7 +17,7 @@ If you ever encounter an error similar to:
 ```
 Error: cherry-pick of commit abc123 failed in reponame
 ```
-you might need to fix the commits yourself. Taking a look at the [README-BUILD-NEWER-VERSIONS-DEPRECATED.md](README-BUILD-NEWER-VERSIONS-DEPRECATED.md) document might be useful on learning how to push your changes to Github but you do not have to follow everything there because it's based on an old method.
+you might need to fix the commits yourself. Taking a look at the [README-BUILD-NEWER-VERSIONS-DEPRECATED.md from v0.0.4](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder/blob/v0.0.4/README-BUILD-NEWER-VERSIONS-DEPRECATED.md) document might be useful on learning how to push your changes to Github but you do not have to follow everything there because it's based on an old method.
 
 ## Requisites
 
