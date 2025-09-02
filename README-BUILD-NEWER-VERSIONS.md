@@ -183,11 +183,11 @@ As the `@@OOBUILDER@@` user run:
 ```
 mkdir ~/build-oo
 cd ~/build-oo
-git clone https://github.com/btactic/unlimited-onlyoffice-package-builder
+git clone https://github.com/btactic-oo/unlimited-onlyoffice-package-builder
 cd unlimited-onlyoffice-package-builder
 git checkout v0.0.4
 # Ignore detached HEAD message
-./onlyoffice-package-builder.sh --product-version=@@VERSION-X.Y.Z@@ --build-number=@@VERSION-T@@ --unlimited-organization=btactic --tag-suffix=-@@ACME@@ --debian-package-suffix=-@@ACME@@
+./onlyoffice-package-builder.sh --product-version=@@VERSION-X.Y.Z@@ --build-number=@@VERSION-T@@ --unlimited-organization=btactic-oo --tag-suffix=-@@ACME@@ --debian-package-suffix=-@@ACME@@
 ```
 
 ### Final deb package
