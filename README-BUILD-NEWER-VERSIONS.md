@@ -149,24 +149,6 @@ Also make sure to run the usual 'Hello world' docker examples under the `@@OOBUI
 These 'Hello world' docker examples are usually explained in most of the docker installation manuals.
 If 'Hello world' docker example does not work as expected then building thanks to our Dockerfiles will definitely not work.
 
-### Git ssh keys
-
-**Note: This section is only needed if you want to: 'Release based on Github Actions'.**
-
-*Note: The commands below need to be run as the `@@OOBUILDER@@` user.*
-
-You need to run the command below in order to create a key.
-
-```
-ssh-keygen -t rsa -b 4096 -C "@@OOBUILDER@@@domain.com"
-```
-
-the email address needs to be the one used for your GitHub account.
-
-Then upload the `id_rsa.pub` key to your GitHub profile: [https://github.com/settings/keys](https://github.com/settings/keys).
-
-Note: I personally only use an additional Github account because you cannot set this SSH key as a read-only one. You are supposed to use a deploy key but those are attached to a single repo or organisation.
-
 ### Git software
 
 ```
@@ -197,6 +179,145 @@ The final `onlyoffice-documentserver_@@VERSION-X.Y.Z@@-@@VERSION-T@@-@@ACME@@_am
 If you wanted to build in your own VPS **you are done.**
 
 ## Release based on Github Actions (DESKTOPM)
+
+### Github - Create organisation or user
+
+First of all you need to create a Github account/user, a Github organisation, or reuse your existant Github account/user.
+
+### Git ssh keys
+
+*Note: The commands below need to be run as the `@@OOBUILDER@@` user.*
+
+You need to run the command below in order to create a key.
+
+```
+ssh-keygen -t rsa -b 4096 -C "@@OOBUILDER@@@domain.com"
+```
+
+the email address needs to be the one used for your GitHub account.
+
+Then upload the `id_rsa.pub` key to your GitHub profile: [https://github.com/settings/keys](https://github.com/settings/keys).
+
+Note: I personally only use an additional Github account because you cannot set this SSH key as a read-only one. You are supposed to use a deploy key but those are attached to a single repo or organisation.
+
+### Login onto your Github account
+
+You should know how to login onto your Github account. Go ahead and login there.
+
+### Fork btactic's unlimited-onlyoffice-package-builder
+
+- Visit [btactic-oo's unlimited-onlyoffice-package-builder repo](https://github.com/btactic-oo/unlimited-onlyoffice-package-builder).
+- Click on **Fork** button.
+- Select `@@ACMEOO@@` as the Owner.
+- Uncheck 'Copy the main branch only'
+- **Do not modify** Repository name
+- Click on **Create fork** button
+
+### Fork ONLYOFFICE's build_tools
+
+- Visit [ONLYOFFICE's build_tools repo](https://github.com/ONLYOFFICE/build_tools).
+- Click on **Fork** button.
+- Select `@@ACMEOO@@` as the Owner.
+- Uncheck 'Copy the main branch only'
+- **Do not modify** Repository name
+- Click on **Create fork** button
+
+### Fork ONLYOFFICE's server
+
+- Visit [ONLYOFFICE's server repo](https://github.com/ONLYOFFICE/server).
+- Click on **Fork** button.
+- Select `@@ACMEOO@@` as the Owner.
+- Uncheck 'Copy the main branch only'
+- **Do not modify** Repository name
+- Click on **Create fork** button
+
+### Fork ONLYOFFICE's web-apps
+
+- Visit [ONLYOFFICE's web-apps repo](https://github.com/ONLYOFFICE/web-apps).
+- Click on **Fork** button.
+- Select `@@ACMEOO@@` as the Owner.
+- Uncheck 'Copy the main branch only'
+- **Do not modify** Repository name
+- Click on **Create fork** button
+
+### Main directory
+
+```
+mkdir ~/onlyoffice_repos
+```
+
+### Clone your own unlimited-onlyoffice-package-builder repo
+
+You can actuall skip this step but it's nice to have actual repos in your computer just in case they disappear.
+
+```
+cd ~/onlyoffice_repos
+git clone git@github.com:@@ACMEOO@@/unlimited-onlyoffice-package-builder.git
+```
+
+### Clone your own build_tools repo
+
+```
+cd ~/onlyoffice_repos
+git clone git@github.com:@@ACMEOO@@/build_tools.git
+```
+
+### Clone your own server repo
+
+```
+cd ~/onlyoffice_repos
+git clone git@github.com:@@ACMEOO@@/server.git
+```
+
+### Clone your own web-apps repo
+
+```
+cd ~/onlyoffice_repos
+git clone git@github.com:@@ACMEOO@@/web-apps.git
+```
+
+## Add upstream and btactic repos as remotes (DESKTOPM)
+
+We will need to be able to fetch from both upstream (ONLYOFFICE) and btactic repos.
+From upstream we will get the latest tags (useful if you repeat this process in the future).
+And from btactic repos you will get the no-limits commits just in case you don't want to recreate them manually.
+
+We will do this step in one go for all of the needed repos so that it does not take too much space in the document.
+
+```
+cd ~/onlyoffice_repos/build_tools
+git remote add upstream-origin git@github.com:ONLYOFFICE/build_tools.git
+git remote add btactic-origin git@github.com:btactic-oo/build_tools.git
+
+cd ~/onlyoffice_repos/server
+git remote add upstream-origin git@github.com:ONLYOFFICE/server.git
+git remote add btactic-origin git@github.com:btactic-oo/server.git
+
+cd ~/onlyoffice_repos/web-apps
+git remote add upstream-origin git@github.com:ONLYOFFICE/web-apps.git
+git remote add btactic-origin git@github.com:btactic-oo/web-apps.git
+```
+
+## Update and Fetch newest tags (DESKTOPM)
+
+Once again we do it in one go.
+
+```
+cd ~/onlyoffice_repos/build_tools
+git checkout master
+git pull upstream-origin master
+git fetch --all --tags
+
+cd ~/onlyoffice_repos/server
+git checkout master
+git pull upstream-origin master
+git fetch --all --tags
+
+cd ~/onlyoffice_repos/web-apps
+git checkout master
+git pull upstream-origin master
+git fetch --all --tags
+```
 
 ### Enable Github Actions
 
