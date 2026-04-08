@@ -949,6 +949,14 @@ That's what v0.0.7 is going to be.
 - v0.0.7 tag should be pushed.
 - Associated issue asking for feedback should be updated.
 
+## Packaging issues on Debian 11
+
+Apparently building in Debian 11 (or Debian 12) is not possible because I am getting an `dpkg-deb: error: unknown option --threads-max=4` error.
+
+So,... we should switch to Debian 13.
+
+So, let's fix that and release v0.0.8 and hope for the best.
+
 ## Publish build on Github Actions
 
 Build the new version based on Github Actions so that it can be downloaded and tested.
