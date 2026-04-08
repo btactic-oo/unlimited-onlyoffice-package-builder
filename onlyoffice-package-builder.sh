@@ -242,7 +242,7 @@ fi
 if [ "${BUILD_DEB}" == "true" ] ; then
   if [ ${build_oo_binaries_exit_value} -eq 0 ] ; then
     cd deb_build
-    docker build --tag onlyoffice-deb-builder . -f Dockerfile-manual-debian-11
+    docker build --tag onlyoffice-deb-builder . -f Dockerfile-manual-debian-13
     docker run \
       --env PRODUCT_VERSION=${PRODUCT_VERSION} \
       --env BUILD_NUMBER=${BUILD_NUMBER} \
