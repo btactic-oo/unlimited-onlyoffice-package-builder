@@ -221,9 +221,9 @@ build_oo_binaries() {
   cd build_tools
   mkdir ${_OUT_FOLDER}
   docker build --tag onlyoffice-document-editors-builder .
-  docker run -e PRODUCT_VERSION=${_PRODUCT_VERSION} -e BUILD_NUMBER=${_BUILD_NUMBER} -e NODE_ENV='production' -v $(pwd)/${_OUT_FOLDER}:/build_tools/out -v $(pwd)/../server:/server -v $(pwd)/../web-apps:/web-apps onlyoffice-document-editors-builder /bin/bash -c '\
-    cd tools/linux && \
-    python3 ./automate.py --branch=tags/'"${_UPSTREAM_TAG}"
+  docker run -e BRANCH=tags/${_UPSTREAM_TAG} -e PRODUCT_VERSION=${_PRODUCT_VERSION} -e BUILD_NUMBER=${_BUILD_NUMBER} -e NODE_ENV='production' -v $(pwd)/${_OUT_FOLDER}:/build_tools/out -v $(pwd)/../server:/server -v $(pwd)/../web-apps:/web-apps onlyoffice-document-editors-builder /bin/bash -c '\
+    ./tools/linux/python3/bin/python3 ./configure.py --sysroot "1" --clean "0" --update-light "1" --branch '"${BRANCH}"' --update "1" --module "server" --qt-dir "$(pwd)/tools/linux/qt_build/Qt-5.9.9" && \
+    ./tools/linux/python3/bin/python3 ./make.py'
   cd ..
 
 }
