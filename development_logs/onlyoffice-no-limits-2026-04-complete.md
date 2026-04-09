@@ -957,6 +957,12 @@ So,... we should switch to Debian 13.
 
 So, let's fix that and release v0.0.8 and hope for the best.
 
+## Packaging issues on Debian 13
+
+Well, apparently Debian 13 does not have `E: Unable to locate package software-properties-common` package. Let's remove it and try again.
+
+Let's release v0.0.9 and hope for the best. (Unfortunately I have no time to test this offline manually and I have to one-shot it via Github Actions.
+
 ## Publish build on Github Actions
 
 Build the new version based on Github Actions so that it can be downloaded and tested.
