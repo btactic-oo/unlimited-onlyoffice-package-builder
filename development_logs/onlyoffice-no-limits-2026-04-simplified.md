@@ -57,7 +57,7 @@ mkdir ~/build-oo
 cd ~/build-oo
 git clone https://github.com/btactic-oo/unlimited-onlyoffice-package-builder
 cd unlimited-onlyoffice-package-builder
-git checkout v0.0.9
+git checkout v0.0.10
 ./onlyoffice-package-builder.sh --product-version=9.3.1 --build-number=11 --unlimited-organization=btactic-oo --tag-suffix=-btactic --debian-package-suffix=-btactic
 ```
 
