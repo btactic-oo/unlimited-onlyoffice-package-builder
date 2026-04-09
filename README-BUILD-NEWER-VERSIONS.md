@@ -9,7 +9,7 @@
 
 Well, in this case this document is for you.
 
-You will be able to produce a Debian 11 DEB package that might also work on other Debian/Ubuntu systems.
+You will be able to produce a Debian 13 DEB package that might also work on other Debian/Ubuntu systems.
 
 ## About failed commits
 
@@ -26,7 +26,7 @@ Despite what we suppose just below you could actually do everything in the same 
 In this document we will suppose that you have:
 
 - A desktop GNU/Linux machine where you will have your Github keys
-- A blank virtual machine with Debian 11 in it which will be only be used to build OnlyOffice
+- A blank virtual machine with Debian 13 in it which will be only be used to build OnlyOffice
 - A virtual machine with onlyoffice installed in it from the official repo packages
 
 or in another words (with their own alias):
@@ -92,7 +92,7 @@ Please notice that if you decide to build directly from Github Actions this buil
 
 ### Requisites
 
-- Debian 11 Netinst was choosen (Any other Debian based distro which supports docker should also be fine).
+- Debian 13 Netinst was choosen (Any other Debian based distro which supports docker should also be fine).
 - Required RAM: 16 GB RAM (Minimum) or 8 GB RAM with 8 GB SWAP.
 - Recommended: 50 GB Hard disk space
 
@@ -328,9 +328,9 @@ Visit [https://github.com/@@ACMEOO@@/unlimited-onlyoffice-package-builder/action
 ```
 cd ~/onlyoffice_repos/unlimited-onlyoffice-package-builder
 git checkout main
-sed -i 's/DEBIAN_PACKAGE_SUFFIX: -btactic/DEBIAN_PACKAGE_SUFFIX: -@@ACME@@/g' .github/workflows/build-release-debian-11.yml
-sed -i 's/TAG_SUFFIX: -btactic/TAG_SUFFIX: -@@ACME@@/g' .github/workflows/build-release-debian-11.yml
-git add .github/workflows/build-release-debian-11.yml
+sed -i 's/DEBIAN_PACKAGE_SUFFIX: -btactic/DEBIAN_PACKAGE_SUFFIX: -@@ACME@@/g' .github/workflows/build-release-debian-13.yml
+sed -i 's/TAG_SUFFIX: -btactic/TAG_SUFFIX: -@@ACME@@/g' .github/workflows/build-release-debian-13.yml
+git add .github/workflows/build-release-debian-13.yml
 git commit -m 'Use @@ACME@@ as a suffix in Github Actions'
 git push origin main
 ```
@@ -341,8 +341,8 @@ git push origin main
 cd ~/onlyoffice_repos/unlimited-onlyoffice-package-builder
 git checkout main
 git push origin main # Just to be safe
-git tag -a 'builds-debian-11/@@VERSION-X.Y.Z@@.@@VERSION-T@@' -m 'builds-debian-11/@@VERSION-X.Y.Z@@.@@VERSION-T@@'
-git push origin 'builds-debian-11/@@VERSION-X.Y.Z@@.@@VERSION-T@@'
+git tag -a 'builds-debian-13/@@VERSION-X.Y.Z@@.@@VERSION-T@@' -m 'builds-debian-13/@@VERSION-X.Y.Z@@.@@VERSION-T@@'
+git push origin 'builds-debian-13/@@VERSION-X.Y.Z@@.@@VERSION-T@@'
 ```
 .
 

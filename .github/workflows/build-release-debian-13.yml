@@ -3,19 +3,19 @@ name: release-onlyoffice
 on:
   push:
     tags:
-      - builds-debian-11/*
+      - builds-debian-13/*
 
 env:
   DEBIAN_PACKAGE_SUFFIX: -btactic
   TAG_SUFFIX: -btactic
-  DISTRO_FULLNAME: Debian 11
-  DISTRO_TAG_PREFIX: debian-11
+  DISTRO_FULLNAME: Debian 13
+  DISTRO_TAG_PREFIX: debian-13
 
 jobs:
   onlyoffice-release:
     strategy:
       matrix:
-        TARGET_DISTRO: [ "debian-11" ]
+        TARGET_DISTRO: [ "debian-13" ]
     runs-on: ubuntu-latest
     permissions:
       contents: write

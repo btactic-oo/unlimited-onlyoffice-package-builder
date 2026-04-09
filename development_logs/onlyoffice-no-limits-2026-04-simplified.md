@@ -73,8 +73,8 @@ We should be able to build and publish a release in our `unlimited-onlyoffice-pa
 cd onlyoffice_repos/unlimited-onlyoffice-package-builder
 git checkout main
 git push origin main # Just to be safe
-git tag -a 'builds-debian-11/9.3.1.11' -m 'builds-debian-11/9.3.1.11'
-git push origin 'builds-debian-11/9.3.1.11'
+git tag -a 'builds-debian-13/9.3.1.11' -m 'builds-debian-13/9.3.1.11'
+git push origin 'builds-debian-13/9.3.1.11'
 ```
 .
 
