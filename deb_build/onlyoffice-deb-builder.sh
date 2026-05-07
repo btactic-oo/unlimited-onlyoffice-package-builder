@@ -33,6 +33,51 @@ EOF
 
 }
 
+UPSTREAM_ORGANIZATION="ONLYOFFICE"
+
+DOCUMENT_SERVER_PACKAGE_CUSTOM_COMMITS="84268299a425d4ea8966cf1645c65236d41cbe15"
+
+prepare_custom_repo() {
+
+  _REPO=$1
+  shift
+  _TAG=$1
+  shift
+  _UNLIMITED_ORGANIZATION=$1
+  shift
+  # Rest of arguments are commits to cherry-pick in order
+
+  git clone https://github.com/${_UNLIMITED_ORGANIZATION}/${_REPO}
+  cd ${_REPO}
+  git remote add upstream-origin https://github.com/${UPSTREAM_ORGANIZATION}/${_REPO}
+
+  git checkout master
+  git pull upstream-origin master
+  git fetch --all --tags
+  git checkout tags/${_TAG} -b ${_TAG}-custom
+
+  # Hard-code temp git user.name and user.email for this local cherry-picked commit
+  git config user.name 'CherryPick User'
+  git config user.email 'cherrypick@btacticoo.com'
+
+  while [ "$#" -gt 0 ]; do
+    _ncommit=$1
+    if ! git cherry-pick "${_ncommit}"; then
+      echo "Error: cherry-pick of commit ${_ncommit} failed in ${_REPO}" >&2
+      echo "Aborting!"
+      exit 3
+    fi
+    shift
+  done
+
+  # Force our changes
+  git tag --delete ${_TAG}
+  git tag -a "${_TAG}" -m "${_TAG}"
+
+  cd ..
+
+}
+
 
 # Check the arguments.
 for option in "$@"; do
@@ -122,7 +167,7 @@ build_deb() {
   # apt install build-essential m4 npm
   # npm install -g pkg
 
-  git clone https://github.com/ONLYOFFICE/document-server-package.git -b ${_GIT_CLONE_BRANCH}
+  prepare_custom_repo "document-server-package" "${_GIT_CLONE_BRANCH}" "${_UNLIMITED_ORGANIZATION}" ${DOCUMENT_SERVER_PACKAGE_CUSTOM_COMMITS}
   # Ignore DETACHED warnings
   # Workaround for installing dependencies - BEGIN
   cd ${DOCUMENT_SERVER_PACKAGE_PATH}
